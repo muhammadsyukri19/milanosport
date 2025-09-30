@@ -1,0 +1,384 @@
+/* src/pages/Home.css */
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.home-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", sans-serif;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  padding-top: 5rem;
+  background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 50%, #eff6ff 100%);
+}
+
+.hero-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 6rem 1.5rem;
+}
+
+.hero-text {
+  text-align: center;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.hero-badge span {
+  background-color: #d1fae5;
+  color: #047857;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.hero-title-gradient {
+  background: linear-gradient(135deg, #059669 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: #4b5563;
+  margin-bottom: 2.5rem;
+  line-height: 1.75;
+}
+
+/* Sports Pills */
+.sports-pills {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.sport-pill {
+  background-color: white;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #f3f4f6;
+}
+
+.sport-emoji {
+  margin-right: 0.5rem;
+}
+
+.sport-name {
+  color: #374151;
+  font-weight: 500;
+}
+
+.hero-btn {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.hero-btn:hover {
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+/* Features Section */
+.features-section {
+  padding: 5rem 0;
+  background-color: white;
+}
+
+.section-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  color: #4b5563;
+  font-size: 1.125rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.feature-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.feature-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-0.25rem);
+}
+
+.feature-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.icon-white {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.feature-description {
+  color: #4b5563;
+  text-align: center;
+  line-height: 1.625;
+}
+
+/* How It Works Section */
+.howto-section {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, #f9fafb 0%, #ecfdf5 100%);
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.step-item {
+  text-align: center;
+}
+
+.step-number {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.step-number span {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.step-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+}
+
+.step-desc {
+  color: #4b5563;
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.cta-content {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.cta-subtitle {
+  color: #d1fae5;
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+}
+
+.cta-btn {
+  background-color: white;
+  color: #047857;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.cta-btn:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+/* Footer */
+.footer {
+  background-color: #111827;
+  color: #d1d5db;
+  padding: 3rem 0;
+}
+
+.footer-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.footer-brand {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+}
+
+.footer-desc {
+  color: #9ca3af;
+}
+
+.footer-heading {
+  color: white;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.footer-bottom {
+  border-top: 1px solid #374151;
+  padding-top: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .features-grid,
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar-content {
+    padding: 1rem;
+  }
+
+  .hero-content {
+    padding: 4rem 1rem;
+  }
+}

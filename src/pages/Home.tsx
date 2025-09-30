@@ -1,156 +1,227 @@
 // src/pages/Home.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Navbar } from "../components/common/Navbar"; // Asumsikan Anda memiliki komponen Navbar
+import {
+  Calendar,
+  Trophy,
+  DollarSign,
+  Clock,
+  MapPin,
+  Phone,
+} from "lucide-react";
+import { Navbar } from "../components/common/Navbar";
+import "./Home.css";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
   const handleReservasiClick = () => {
-    navigate("/reservasi"); // Arahkan ke halaman reservasi
+    navigate("/reservasi");
   };
 
   const FeatureCard: React.FC<{
     title: string;
-    icon: string;
+    icon: React.ReactNode;
     description: string;
   }> = ({ title, icon, description }) => (
-    <div
-      style={{
-        padding: "20px",
-        border: "1px solid #e0e0e0",
-        borderRadius: "8px",
-        width: "30%",
-        textAlign: "center",
-        boxShadow: "0 4px 8px rgba(0,0,0,0.05)",
-      }}
-    >
-      <div style={{ fontSize: "3rem", color: "#007bff", marginBottom: "10px" }}>
-        {icon}
-      </div>
-      <h3 style={{ color: "#333" }}>{title}</h3>
-      <p style={{ color: "#666", fontSize: "0.9rem" }}>{description}</p>
+    <div className="feature-card">
+      <div className="feature-icon">{icon}</div>
+      <h3 className="feature-title">{title}</h3>
+      <p className="feature-description">{description}</p>
     </div>
   );
 
+  const sports = [
+    { name: "Mini Soccer", emoji: "⚽" },
+    { name: "Futsal", emoji: "🥅" },
+    { name: "Badminton", emoji: "🏸" },
+    { name: "Padel", emoji: "🎾" },
+  ];
+
   return (
-    <div style={{ fontFamily: "Arial, sans-serif" }}>
-      {/* Mengganti ini dengan komponen Navbar Anda */}
-      {/* <Navbar /> */}
+    <div className="home-container">
+      {/* Navbar
+      <nav className="navbar">
+        <div className="navbar-content">
+          <div className="navbar-logo">
+            <div className="logo-icon">
+              <span className="logo-text">M</span>
+            </div>
+            <span className="brand-name">MilanoSport</span>
+          </div>
+          <button onClick={handleReservasiClick} className="navbar-btn">
+            Reservasi
+          </button>
+        </div>
+      </nav> */}
 
-      {/* A. Hero Section */}
-      <div
-        style={{
-          background:
-            "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/assets/hero-bg.jpg)",
-          backgroundSize: "cover",
-          height: "80vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "white",
-          textAlign: "center",
-        }}
-      >
-        <h1 style={{ fontSize: "3.5rem", marginBottom: "10px" }}>
-          Satu Tempat, Semua Lapangan.
-        </h1>
-        <p style={{ fontSize: "1.5rem", marginBottom: "30px" }}>
-          Reservasi Cepat, Main Kapan Saja di Aceh.
-        </p>
-        <button
-          onClick={handleReservasiClick}
-          style={{
-            padding: "15px 30px",
-            fontSize: "1.2rem",
-            backgroundColor: "#28a745",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontWeight: "bold",
-          }}
-        >
-          RESERVASI SEKARANG
-        </button>
-      </div>
+      {/* Hero Section */}
+      <div className="hero-section">
+        <div className="hero-content">
+          <div className="hero-text">
+            <div className="hero-badge">
+              <span>Platform Reservasi Lapangan #1 di Aceh</span>
+            </div>
+            <h1 className="hero-title">
+              Satu Tempat,
+              <br />
+              <span className="hero-title-gradient">Semua Lapangan</span>
+            </h1>
+            <p className="hero-subtitle">
+              Reservasi cepat dan mudah untuk Mini Soccer, Futsal, Badminton &
+              Padel.
+              <br />
+              Kapan saja, di mana saja.
+            </p>
 
-      {/* B. Feature Section (Keunggulan) */}
-      <div style={{ padding: "60px 50px", backgroundColor: "#f9f9f9" }}>
-        <h2
-          style={{ textAlign: "center", marginBottom: "40px", color: "#333" }}
-        >
-          Mengapa Memilih MilanoSport?
-        </h2>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            flexWrap: "wrap",
-          }}
-        >
-          <FeatureCard
-            icon="⚽"
-            title="Fasilitas Terlengkap"
-            description="Mini Soccer, Futsal, Badminton, dan Padel dalam satu platform reservasi yang mudah."
-          />
-          <FeatureCard
-            icon="📅"
-            title="Jadwal Real-time"
-            description="Cek ketersediaan semua unit lapangan Anda secara langsung tanpa perlu telepon atau chat."
-          />
-          <FeatureCard
-            icon="💰"
-            title="Harga Terbaik"
-            description="Kami menawarkan harga sewa yang paling kompetitif dan transparan di seluruh wilayah Aceh."
-          />
+            {/* Sports Pills */}
+            <div className="sports-pills">
+              {sports.map((sport, idx) => (
+                <div key={idx} className="sport-pill">
+                  <span className="sport-emoji">{sport.emoji}</span>
+                  <span className="sport-name">{sport.name}</span>
+                </div>
+              ))}
+            </div>
+
+            <button onClick={handleReservasiClick} className="hero-btn">
+              Reservasi Sekarang
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* C. CTA Mini */}
-      <div
-        style={{
-          padding: "40px",
-          textAlign: "center",
-          backgroundColor: "#007bff",
-          color: "white",
-        }}
-      >
-        <h2 style={{ marginBottom: "20px" }}>
-          Siap Amankan Lapangan Anda Hari Ini?
-        </h2>
-        <button
-          onClick={handleReservasiClick}
-          style={{
-            padding: "12px 25px",
-            fontSize: "1.1rem",
-            backgroundColor: "#ffc107",
-            color: "#333",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontWeight: "bold",
-          }}
-        >
-          Cek Jadwal & Booking
-        </button>
+      {/* Features Section */}
+      <div className="features-section">
+        <div className="section-content">
+          <div className="section-header">
+            <h2 className="section-title">Mengapa Memilih MilanoSport?</h2>
+            <p className="section-subtitle">
+              Kemudahan dan kenyamanan untuk pengalaman booking terbaik Anda
+            </p>
+          </div>
+
+          <div className="features-grid">
+            <FeatureCard
+              icon={<Trophy className="icon-white" />}
+              title="Fasilitas Terlengkap"
+              description="Mini Soccer, Futsal, Badminton, dan Padel dalam satu platform yang terintegrasi."
+            />
+            <FeatureCard
+              icon={<Calendar className="icon-white" />}
+              title="Jadwal Real-time"
+              description="Cek ketersediaan langsung tanpa perlu telepon. Transparansi penuh untuk Anda."
+            />
+            <FeatureCard
+              icon={<DollarSign className="icon-white" />}
+              title="Harga Terbaik"
+              description="Harga kompetitif dan transparan di seluruh wilayah Aceh. Tidak ada biaya tersembunyi."
+            />
+          </div>
+        </div>
       </div>
 
-      {/* D. Footer (Ganti dengan komponen Footer Anda) */}
-      <div
-        style={{
-          padding: "40px",
-          backgroundColor: "#333",
-          color: "#fff",
-          textAlign: "center",
-        }}
-      >
-        <p>
-          &copy; 2025 MilanoSport. Reservasi Lapangan Aceh. | Kontak: (0651)
-          123456
-        </p>
+      {/* How It Works */}
+      <div className="howto-section">
+        <div className="section-content">
+          <div className="section-header">
+            <h2 className="section-title">Cara Mudah Booking</h2>
+            <p className="section-subtitle">
+              Hanya 3 langkah untuk mendapatkan lapangan impian Anda
+            </p>
+          </div>
+
+          <div className="steps-grid">
+            {[
+              {
+                step: "1",
+                title: "Pilih Lapangan",
+                desc: "Browse dan pilih jenis lapangan yang Anda inginkan",
+              },
+              {
+                step: "2",
+                title: "Tentukan Jadwal",
+                desc: "Pilih tanggal dan jam yang tersedia sesuai kebutuhan",
+              },
+              {
+                step: "3",
+                title: "Konfirmasi Booking",
+                desc: "Bayar dan terima konfirmasi booking langsung",
+              },
+            ].map((item, idx) => (
+              <div key={idx} className="step-item">
+                <div className="step-number">
+                  <span>{item.step}</span>
+                </div>
+                <h3 className="step-title">{item.title}</h3>
+                <p className="step-desc">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+
+      {/* CTA Section */}
+      <div className="cta-section">
+        <div className="cta-content">
+          <h2 className="cta-title">Siap Amankan Lapangan Anda?</h2>
+          <p className="cta-subtitle">
+            Jangan sampai kehabisan slot! Booking sekarang dan nikmati
+            pengalaman bermain terbaik.
+          </p>
+          <button onClick={handleReservasiClick} className="cta-btn">
+            Cek Jadwal & Booking
+          </button>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="footer-grid">
+            <div className="footer-column">
+              <div className="footer-logo">
+                <div className="logo-icon">
+                  <span className="logo-text">M</span>
+                </div>
+                <span className="footer-brand">MilanoSport</span>
+              </div>
+              <p className="footer-desc">
+                Platform reservasi lapangan olahraga terpercaya di Aceh.
+              </p>
+            </div>
+
+            <div className="footer-column">
+              <h3 className="footer-heading">Kontak</h3>
+              <div className="footer-info">
+                <div className="info-item">
+                  <Phone className="info-icon" />
+                  <span>(0651) 123456</span>
+                </div>
+                <div className="info-item">
+                  <MapPin className="info-icon" />
+                  <span>Aceh, Indonesia</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="footer-column">
+              <h3 className="footer-heading">Jam Operasional</h3>
+              <div className="info-item">
+                <Clock className="info-icon" />
+                <span>Senin - Minggu: 06:00 - 23:00</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-bottom">
+            <p>
+              &copy; 2025 MilanoSport. Reservasi Lapangan Aceh. All rights
+              reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -9,15 +9,11 @@ export const Navbar: React.FC = () => {
   const items = [
     {
       label: "Home",
-      bgColor: "#5519afff",
+      bgColor: "#0D0716",
       textColor: "#fff",
       links: [
-        {
-          label: "Keunggulan kami",
-          href: "/company",
-          ariaLabel: "About Company",
-        },
-        { label: "skills", href: "/careers", ariaLabel: "About Careers" },
+        { label: "Company", href: "/company", ariaLabel: "About Company" },
+        { label: "Careers", href: "/careers", ariaLabel: "About Careers" },
       ],
     },
     {

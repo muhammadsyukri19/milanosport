@@ -1,0 +1,192 @@
+/* src/components/common/Navbar.css */
+
+.navbar {
+  position: fixed;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  top: 15px;
+  left: 35vh;
+  right: 35vh;
+  background-color: #ffff;
+  border-radius: 40px;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem 3rem;
+  display: flex;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+/* Logo & Brand */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.02);
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.logo-text {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #059669 0%, #065f46 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Navigation Menu */
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #4b5563;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #059669;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link-active {
+  color: #059669;
+  font-weight: 600;
+}
+
+.nav-link-active::after {
+  width: 100%;
+}
+
+/* Reservasi Button */
+.nav-btn-reservasi {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  padding: 0.625rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.nav-btn-reservasi:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+}
+
+.nav-btn-reservasi:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 1rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .navbar-menu {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    font-size: 0.875rem;
+  }
+
+  .nav-btn-reservasi {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .brand-name {
+    font-size: 1.25rem;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .logo-text {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0.75rem 1rem;
+  }
+
+  .navbar-menu {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+  }
+
+  .nav-link {
+    font-size: 0.8rem;
+  }
+
+  .nav-btn-reservasi {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8rem;
+  }
+}
