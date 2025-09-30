@@ -36,7 +36,7 @@ const Home: React.FC = () => {
   return (
     <div style={{ fontFamily: "Arial, sans-serif" }}>
       {/* Mengganti ini dengan komponen Navbar Anda */}
-      <Navbar />
+      {/* <Navbar /> */}
 
       {/* A. Hero Section */}
       <div
