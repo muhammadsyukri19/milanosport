@@ -12,6 +12,17 @@
   z-index: 1000;
   padding: 1rem 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.navbar-visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.navbar-hidden {
+  transform: translateX(-50%) translateY(-100px);
+  opacity: 0;
 }
 
 .navbar-container {
