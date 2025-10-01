@@ -21,10 +21,11 @@ interface InfiniteScrollProps {
   autoplaySpeed?: number;
   autoplayDirection?: "down" | "up";
   pauseOnHover?: boolean;
+  gap?: string;
 }
 
 const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
-  width = "30rem",
+  width = "40rem",
   maxHeight = "100%",
   negativeMargin = "-0.5em",
   items = [],
@@ -35,6 +36,7 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
   autoplaySpeed = 0.5,
   autoplayDirection = "down",
   pauseOnHover = false,
+  gap = "2rem",
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -176,6 +178,7 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
           ref={containerRef}
           style={{
             transform: getTiltTransform(),
+            gap,
           }}
         >
           {items.map((item, i) => (
