@@ -1,7 +1,8 @@
 /* Step1_FieldSelection.css - Clean White Design with Fresh Green Accents */
 
 .field-selection-container {
-  padding: 60px 40px;
+  padding: 110px 40px;
+  padding-bottom: 10px;
   background: white;
   min-height: 600px;
   position: relative;
@@ -292,7 +293,7 @@
 }
 
 .detail-section {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .detail-section h3 {

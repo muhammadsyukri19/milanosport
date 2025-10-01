@@ -1,9 +1,10 @@
 /* Step3_BookingForm.css - Clean White Design with Fresh Green Accents */
 
 .booking-form-container {
-  padding: 40px;
+  padding: 110px 40px;
   background: white;
   min-height: 600px;
+  padding-bottom: 10px;
 }
 
 /* Header Section */
