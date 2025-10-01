@@ -1,107 +1,86 @@
-// src/pages/Reservation/Step1_FieldSelection.tsx
-
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Step1_FieldSelection.css";
 
-// --- DATA DUMMY DIDEFINISIKAN LANGSUNG (Untuk menghindari import error) ---
 interface FieldType {
   type: "Mini Soccer" | "Futsal" | "Badminton" | "Padel";
   price: number;
   description: string;
+  icon: string;
 }
 
 const DUMMY_FIELDS: FieldType[] = [
   {
     type: "Mini Soccer",
     price: 200000,
-    description: "Lapangan rumput sintetis standar.",
+    description: "Lapangan rumput sintetis berkualitas tinggi dengan fasilitas lengkap.",
+    icon: "⚽",
   },
   {
     type: "Futsal",
     price: 150000,
-    description: "Permukaan vinyl berkualitas tinggi.",
+    description: "Permukaan vinyl berkualitas tinggi dengan pencahayaan optimal.",
+    icon: "🥅",
   },
   {
     type: "Badminton",
     price: 50000,
-    description: "4 unit lapangan dengan lantai kayu.",
+    description: "4 unit lapangan dengan lantai kayu dan net standar internasional.",
+    icon: "🏸",
   },
   {
     type: "Padel",
     price: 130000,
-    description: "2 unit lapangan dengan dinding kaca.",
+    description: "2 unit lapangan dengan dinding kaca dan permukaan sintetis premium.",
+    icon: "🎾",
   },
 ];
-// --- AKHIR DATA DUMMY ---
 
-// Komponen Modal Detail (Tampilan saja)
-const FieldDetailModal: React.FC<{ field: FieldType; onClose: () => void }> = ({
-  field,
-  onClose,
-}) => (
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "rgba(0,0,0,0.6)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 100,
-      fontFamily: "Arial, sans-serif",
-    }}
-  >
-    <div
-      style={{
-        backgroundColor: "white",
-        padding: "30px",
-        borderRadius: "10px",
-        maxWidth: "600px",
-        width: "90%",
-      }}
-    >
-      <h2 style={{ borderBottom: "2px solid #007bff", paddingBottom: "10px" }}>
-        Detail: {field.type}
-      </h2>
-      <div
-        style={{
-          height: "150px",
-          backgroundColor: "#eee",
-          marginBottom: "15px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        [Galeri Foto Lapangan - Fokus Desain UI]
+const FieldDetailModal: React.FC<{ field: FieldType; onClose: () => void }> = ({ field, onClose }) => (
+  <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-header">
+        <span className="modal-icon">{field.icon}</span>
+        <h2 className="modal-title">{field.type}</h2>
+        <button className="modal-close" onClick={onClose}>
+          ×
+        </button>
       </div>
-      <p>
-        <strong>Deskripsi:</strong> {field.description} (Fasilitas terbaik di
-        Aceh)
-      </p>
-      <p>
-        <strong>Harga Dasar:</strong> Rp {field.price.toLocaleString("id-ID")} /
-        jam
-      </p>
-      <div
-        style={{
-          marginTop: "20px",
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
-        <button
-          onClick={onClose}
-          style={{
-            padding: "10px 15px",
-            background: "none",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
+
+      <div className="modal-image">
+        <div className="image-placeholder">
+          <span className="image-icon">{field.icon}</span>
+          <p>Premium Sports Facility - {field.type}</p>
+        </div>
+      </div>
+
+      <div className="modal-details">
+        <div className="detail-section">
+          <h3>Deskripsi Fasilitas</h3>
+          <p>{field.description} Fasilitas terbaik di Aceh dengan teknologi modern dan standar internasional.</p>
+        </div>
+
+        <div className="detail-section">
+          <h3>Informasi Harga</h3>
+          <div className="price-info">
+            <span className="price-label">Harga Dasar:</span>
+            <span className="price-value">Rp {field.price.toLocaleString("id-ID")} / jam</span>
+          </div>
+        </div>
+
+        <div className="detail-section">
+          <h3>Fasilitas Tambahan</h3>
+          <ul className="facilities-list">
+            <li>✓ Ruang ganti dengan locker</li>
+            <li>✓ Shower dengan air hangat</li>
+            <li>✓ Parkir luas dan aman</li>
+            <li>✓ Kantin dan area istirahat</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="modal-actions">
+        <button className="btn-primary" onClick={onClose}>
           Tutup
         </button>
       </div>
@@ -109,115 +88,75 @@ const FieldDetailModal: React.FC<{ field: FieldType; onClose: () => void }> = ({
   </div>
 );
 
-// Komponen Card Pilihan Lapangan
-const FieldCardUI: React.FC<{ field: FieldType }> = ({ field }) => {
+const FieldCardUI: React.FC<{
+  field: FieldType;
+  onFieldSelect?: (fieldType: string) => void;
+}> = ({ field, onFieldSelect }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fungsi placeholder, tidak melakukan apapun
   const handleAction = (action: string) => {
-    if (action === "Baca Selengkapnya") {
+    if (action === "detail") {
       setIsModalOpen(true);
-    } else {
-      alert(
-        `Simulasi: Memilih jenis lapangan ${field.type}. Fokus pada desain UI Anda.`
-      );
+    } else if (action === "select") {
+      if (onFieldSelect) {
+        onFieldSelect(field.type);
+      }
     }
+  };
+
+  const getFieldClass = () => {
+    return field.type.toLowerCase().replace(" ", "-");
   };
 
   return (
     <>
-      <div
-        style={{
-          border: "1px solid #ccc",
-          borderRadius: "8px",
-          width: "280px",
-          overflow: "hidden",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-          backgroundColor: "white",
-          fontFamily: "Arial, sans-serif",
-        }}
-      >
-        {/* Visual Placeholder */}
-        <div
-          style={{
-            height: "150px",
-            backgroundColor: "#a3d8ff",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#fff",
-            fontSize: "1.5rem",
-          }}
-        >
-          {field.type} FOTO
+      <div className={`field-card ${getFieldClass()}`}>
+        <div className="field-card-header">
+          <div className="field-icon">{field.icon}</div>
+          <h3 className="field-card-title">{field.type}</h3>
         </div>
 
-        <div style={{ padding: "20px" }}>
-          <h3 style={{ color: "#007bff", marginBottom: "5px" }}>
-            {field.type}
-          </h3>
-          <p style={{ fontSize: "0.9rem", color: "#555", minHeight: "40px" }}>
-            {field.description}
-          </p>
-          <p style={{ fontWeight: "bold", margin: "15px 0 20px 0" }}>
-            Mulai: Rp {field.price.toLocaleString("id-ID")}/jam
-          </p>
+        <div className="field-card-body">
+          <p className="field-description">{field.description}</p>
 
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <button
-              onClick={() => handleAction("Cek Jadwal")}
-              style={{
-                padding: "10px 15px",
-                backgroundColor: "#28a745",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontWeight: "bold",
-              }}
-            >
-              Cek Jadwal
+          <div className="field-price-container">
+            <span className="price-label">Mulai dari</span>
+            <span className="field-price">Rp {field.price.toLocaleString("id-ID")}/jam</span>
+          </div>
+
+          <div className="field-actions">
+            <button onClick={() => handleAction("select")} className="btn-primary">
+              Pilih Lapangan
             </button>
-            <button
-              onClick={() => handleAction("Baca Selengkapnya")}
-              style={{
-                padding: "10px 15px",
-                background: "none",
-                border: "1px solid #007bff",
-                color: "#007bff",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              Baca Selengkapnya
+            <button onClick={() => handleAction("detail")} className="btn-secondary">
+              Detail
             </button>
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <FieldDetailModal field={field} onClose={() => setIsModalOpen(false)} />
-      )}
+      {isModalOpen && <FieldDetailModal field={field} onClose={() => setIsModalOpen(false)} />}
     </>
   );
 };
 
-// Komponen Utama Step 1
 const Step1_FieldSelection: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleFieldSelect = (fieldType: string) => {
+    // Navigate to schedule page with selected field
+    navigate(`/jadwal?field=${encodeURIComponent(fieldType)}`);
+  };
+
   return (
-    <div style={{ padding: "20px 0", backgroundColor: "#f4f7f6" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "30px", color: "#333" }}>
-        Langkah 1: Pilih Jenis Lapangan
-      </h2>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "30px",
-          flexWrap: "wrap",
-        }}
-      >
+    <div className="field-selection-container">
+      <div className="field-header">
+        <h1 className="field-title">Pilih Lapangan Favorit Anda</h1>
+        <p className="field-subtitle">Fasilitas olahraga premium dengan teknologi terdepan di Aceh. Nikmati pengalaman bermain yang tak terlupakan dengan standar internasional.</p>
+      </div>
+
+      <div className="field-cards-container">
         {DUMMY_FIELDS.map((field) => (
-          <FieldCardUI key={field.type} field={field} />
+          <FieldCardUI key={field.type} field={field} onFieldSelect={handleFieldSelect} />
         ))}
       </div>
     </div>

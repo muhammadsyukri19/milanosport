@@ -8,8 +8,10 @@ import { Navbar } from "./components/common/Navbar"; // Pastikan path ini benar
 import Home from "./pages/Home.tsx"; // Pastikan path ini benar
 import AboutUs from "./pages/AboutUs.tsx"; // Pastikan path ini benar
 
-// Import Reservation Page
-import ReservationPage from "./pages/Reservation/ReservationPage.tsx";
+// Import Reservation Components
+import Step1_FieldSelection from "./pages/Reservation/Step1_FieldSelection.tsx";
+import Step2_ScheduleCheck from "./pages/Reservation/Step2_ScheduleCheck.tsx";
+import Step3_BookingForm from "./pages/Reservation/Step3_BookingForm.tsx";
 
 const App: React.FC = () => {
   return (
@@ -17,7 +19,9 @@ const App: React.FC = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/reservasi" element={<ReservationPage />} />
+        <Route path="/reservasi" element={<Step1_FieldSelection />} />
+        <Route path="/jadwal" element={<Step2_ScheduleCheck />} />
+        <Route path="/booking" element={<Step3_BookingForm />} />
         <Route path="/tentang" element={<AboutUs />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
