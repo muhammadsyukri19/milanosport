@@ -9,7 +9,7 @@ const ReservationPage: React.FC = () => {
   return (
     <div
       style={{
-        padding: "20px",
+        padding: "12vh",
         maxWidth: "1200px",
         margin: "auto",
         fontFamily: "Arial, sans-serif",

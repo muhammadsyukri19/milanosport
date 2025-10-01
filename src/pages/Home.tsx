@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Navbar } from "../components/common/Navbar";
 import "./Home.css";
+import InfiniteScroll from "../components/common/InfiniteScroll.tsx";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -38,23 +39,55 @@ const Home: React.FC = () => {
     { name: "Padel", emoji: "🎾" },
   ];
 
+  const items = [
+    { content: "Mini Soccer" },
+    {
+      content: (
+        <img
+          src="/assets/mini-soccer.jpg"
+          alt="Mini Soccer"
+          style={{ width: "90%", borderRadius: "45px" }}
+        />
+      ),
+    },
+
+    { content: "Futsal" },
+    {
+      content: (
+        <img
+          src="/assets/futsal.jpg"
+          alt="Futsal"
+          style={{ width: "90%", borderRadius: "45px" }}
+        />
+      ),
+    },
+
+    { content: "Badminton" },
+    {
+      content: (
+        <img
+          src="/assets/badminton.jpg"
+          alt="Badminton"
+          style={{ width: "90%", borderRadius: "45px" }}
+        />
+      ),
+    },
+
+    { content: "Padel" },
+    {
+      content: (
+        <img
+          src="/assets/padel.jpg"
+          alt="Padel"
+          style={{ width: "90%", borderRadius: "45px" }}
+        />
+      ),
+    },
+  ];
+
   return (
     <div className="home-container">
-      {/* Navbar
-      <nav className="navbar">
-        <div className="navbar-content">
-          <div className="navbar-logo">
-            <div className="logo-icon">
-              <span className="logo-text">M</span>
-            </div>
-            <span className="brand-name">MilanoSport</span>
-          </div>
-          <button onClick={handleReservasiClick} className="navbar-btn">
-            Reservasi
-          </button>
-        </div>
-      </nav> */}
-
+      <Navbar />
       {/* Hero Section */}
       <div className="hero-section">
         <div className="hero-content">
@@ -87,6 +120,20 @@ const Home: React.FC = () => {
             <button onClick={handleReservasiClick} className="hero-btn">
               Reservasi Sekarang
             </button>
+          </div>
+          {/* Image Section */}
+          <div className="hero-image">
+            <div style={{ height: "500px", position: "relative" }}>
+              <InfiniteScroll
+                items={items}
+                isTilted={true}
+                tiltDirection="left"
+                autoplay={true}
+                autoplaySpeed={2}
+                autoplayDirection="down"
+                pauseOnHover={true}
+              />
+            </div>
           </div>
         </div>
       </div>

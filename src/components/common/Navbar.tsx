@@ -13,11 +13,11 @@ export const Navbar: React.FC = () => {
       textColor: "#fff",
       links: [
         {
-          label: "Keunggulan kami",
+          label: "Reservasi",
           href: "/company",
           ariaLabel: "About Company",
         },
-        { label: "skills", href: "/careers", ariaLabel: "About Careers" },
+        { label: "Lokasi", href: "/careers", ariaLabel: "About Careers" },
       ],
     },
     {
@@ -68,7 +68,7 @@ export const Navbar: React.FC = () => {
       items={items}
       baseColor="#fff"
       menuColor="#000"
-      buttonBgColor="#111"
+      buttonBgColor="#661717"
       buttonTextColor="#fff"
       ease="power3.out"
     />
