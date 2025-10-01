@@ -1,0 +1,482 @@
+/* Step2_ScheduleCheck.css - Clean White Design with Fresh Green Accents */
+
+.schedule-container {
+  padding: 40px;
+  background: white;
+  min-height: 600px;
+}
+
+/* Header Section */
+.schedule-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+  gap: 20px;
+}
+
+.back-button {
+  padding: 12px 20px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.back-button:hover {
+  border-color: #10b981;
+  color: #10b981;
+  transform: translateY(-2px);
+  background: rgba(16, 185, 129, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.schedule-title-section {
+  flex: 1;
+}
+
+.schedule-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #10b981, #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.selected-field {
+  font-size: 1.1rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.selected-field span {
+  font-weight: 600;
+  color: #10b981;
+}
+
+/* Content Section */
+.schedule-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 20px 0;
+}
+
+/* Field Selection */
+.field-selection-section {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+}
+
+.field-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.field-selector-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px 20px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  gap: 10px;
+}
+
+.field-selector-card:hover {
+  border-color: #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+  transform: translateY(-2px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+}
+
+.field-selector-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.field-selector-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 5px;
+}
+
+.field-selector-price {
+  font-size: 0.95rem;
+  color: #10b981;
+  font-weight: 500;
+}
+
+/* Date Selection */
+.date-section {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+}
+
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.date-card {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-card:hover {
+  border-color: #10b981;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+}
+
+.date-card.selected {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: #10b981;
+  color: white;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+.date-day {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.date-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* Time Selection */
+.time-section {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+  animation: slideInUp 0.5s ease-out;
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.time-slot {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.time-slot:hover:not(.unavailable) {
+  border-color: #10b981;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+  background: rgba(16, 185, 129, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.time-slot.selected {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: #10b981;
+  color: white;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+.time-slot.unavailable {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.time-text {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.price-multiplier {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.discount {
+  background: #fef3c7;
+  color: #d97706;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.peak {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.normal {
+  background: #f0fdf4;
+  color: #16a34a;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+/* Duration Selection */
+.duration-section {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  animation: slideInUp 0.5s ease-out 0.1s both;
+}
+
+.duration-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.duration-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #10b981;
+  background: white;
+  color: #10b981;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.duration-btn:hover:not(:disabled) {
+  background: #10b981;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.duration-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.duration-display {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1f2937;
+  min-width: 100px;
+}
+
+.duration-note {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Booking Summary */
+.booking-summary {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #bbf7d0;
+  border-radius: 20px;
+  padding: 30px;
+  animation: slideInUp 0.5s ease-out 0.2s both;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item.total {
+  border-top: 2px solid #10b981;
+  margin-top: 16px;
+  padding-top: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.summary-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.summary-value {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.summary-item.total .summary-value {
+  color: #10b981;
+  font-size: 1.3rem;
+}
+
+.continue-button {
+  width: 100%;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+}
+
+.continue-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(135deg, #059669, #047857);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .schedule-container {
+    padding: 20px;
+  }
+
+  .schedule-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .schedule-title {
+    font-size: 1.8rem;
+  }
+
+  .date-grid,
+  .time-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+  }
+
+  .date-card,
+  .time-slot {
+    padding: 16px 12px;
+  }
+
+  .date-day {
+    font-size: 1.5rem;
+  }
+
+  .time-text {
+    font-size: 1.1rem;
+  }
+
+  .duration-controls {
+    gap: 16px;
+  }
+
+  .duration-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .duration-display {
+    font-size: 1.5rem;
+    min-width: 80px;
+  }
+
+  .date-section,
+  .time-section,
+  .duration-section,
+  .booking-summary {
+    padding: 20px;
+  }
+
+  .summary-item {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .date-grid,
+  .time-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .duration-controls {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
