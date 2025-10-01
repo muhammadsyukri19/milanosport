@@ -1,76 +1,44 @@
-// src/components/common/Navbar.tsx
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
-import CardNav from "./CardNav.tsx";
-import logo from "../asset/react.svg";
 
 export const Navbar: React.FC = () => {
-  const items = [
-    {
-      label: "Home",
-      bgColor: "#5519afff",
-      textColor: "#fff",
-      links: [
-        {
-          label: "Reservasi",
-          href: "/company",
-          ariaLabel: "About Company",
-        },
-        { label: "Lokasi", href: "/careers", ariaLabel: "About Careers" },
-      ],
-    },
-    {
-      label: "Cek & reservasi Jadwal",
-      bgColor: "#170D27",
-      textColor: "#fff",
-      links: [
-        {
-          label: "Featured",
-          href: "/reservasi",
-          ariaLabel: "Featured Projects",
-        },
-        {
-          label: "Case Studies",
-          href: "/projects#cases",
-          ariaLabel: "Project Case Studies",
-        },
-      ],
-    },
-    {
-      label: "Tentang Kami",
-      bgColor: "#271E37",
-      textColor: "#fff",
-      links: [
-        {
-          label: "Email",
-          href: "mailto:hello@milanosport.com",
-          ariaLabel: "Email us",
-        },
-        {
-          label: "Twitter",
-          href: "https://x.com/milanosport",
-          ariaLabel: "Twitter",
-        },
-        {
-          label: "LinkedIn",
-          href: "https://linkedin.com/company/milanosport",
-          ariaLabel: "LinkedIn",
-        },
-      ],
-    },
-  ];
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  const isActive = (path: string) => {
+    return location.pathname === path ? "nav-link active" : "nav-link";
+  };
 
   return (
-    <CardNav
-      logo={logo}
-      logoAlt="Company Logo"
-      items={items}
-      baseColor="#fff"
-      menuColor="#000"
-      buttonBgColor="#661717"
-      buttonTextColor="#fff"
-      ease="power3.out"
-    />
+    <nav className="navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-brand">
+          <div className="logo-icon">
+            <span className="logo-text">M</span>
+          </div>
+          <span className="brand-name">MilanoSport</span>
+        </Link>
+
+        <div className={`navbar-menu ${isOpen ? "active" : ""}`}>
+          <Link to="/" className={isActive("/")}>
+            Home
+          </Link>
+          <Link to="/reservasi" className={isActive("/reservasi")}>
+            Cek & Reservasi
+          </Link>
+          <Link to="/about" className={isActive("/about")}>
+            Tentang Kami
+          </Link>
+          <button className="login-button">Login</button>
+        </div>
+
+        <button className="mobile-menu" onClick={() => setIsOpen(!isOpen)}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
   );
 };
