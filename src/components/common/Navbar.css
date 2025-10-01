@@ -1,71 +1,54 @@
-/* src/components/common/Navbar.css */
-
 .navbar {
   position: fixed;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  top: 15px;
-  left: 35vh;
-  right: 35vh;
-  background-color: #ffff;
-  border-radius: 40px;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
   z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 1rem 3rem;
   display: flex;
-  top: 5px;
-  left: 5px;
-  right: 5px;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-/* Logo & Brand */
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   text-decoration: none;
-  transition: transform 0.3s ease;
-}
-
-.navbar-brand:hover {
-  transform: scale(1.02);
 }
 
 .logo-icon {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-  border-radius: 8px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .logo-text {
-  color: #ffffff;
+  color: white;
   font-weight: bold;
-  font-size: 1.25rem;
-  line-height: 1;
+  font-size: 1.5rem;
 }
 
 .brand-name {
-  font-size: 1.5rem;
-  font-weight: bold;
-  background: linear-gradient(135deg, #059669 0%, #065f46 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #065f46;
 }
 
-/* Navigation Menu */
 .navbar-menu {
   display: flex;
   align-items: center;
@@ -73,120 +56,119 @@
 }
 
 .nav-link {
+  color: #065f46;
   text-decoration: none;
-  color: #4b5563;
-  font-size: 1rem;
   font-weight: 500;
-  padding: 0.5rem 0;
   position: relative;
-  transition: color 0.3s ease;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
 }
 
 .nav-link::after {
   content: "";
   position: absolute;
-  bottom: 0;
+  bottom: -2px;
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  background: #10b981;
   transition: width 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #059669;
 }
 
 .nav-link:hover::after {
   width: 100%;
 }
 
-.nav-link-active {
-  color: #059669;
+.nav-link.active {
+  color: #10b981;
   font-weight: 600;
 }
 
-.nav-link-active::after {
+.nav-link.active::after {
   width: 100%;
 }
 
-/* Reservasi Button */
-.nav-btn-reservasi {
+.login-button {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #ffffff;
-  padding: 0.625rem 1.5rem;
+  color: white;
   border: none;
+  padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
   transition: all 0.3s ease;
-  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
 }
 
-.nav-btn-reservasi:hover {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
-  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+.login-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  transition: transform 0.5s ease;
+}
+
+.login-button:hover::before {
+  transform: translate(-50%, -50%) scale(2);
+}
+
+.login-button:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
-.nav-btn-reservasi:active {
-  transform: translateY(0);
+.mobile-menu {
+  display: none;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
-  .navbar-container {
-    padding: 1rem 1.5rem;
-    flex-wrap: wrap;
+  .navbar {
+    padding: 1rem;
+  }
+
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .mobile-menu span {
+    width: 24px;
+    height: 2px;
+    background: #065f46;
+    transition: all 0.3s ease;
   }
 
   .navbar-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    padding: 1rem;
     gap: 1rem;
-    flex-wrap: wrap;
+    border-radius: 0 0 16px 16px;
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
   }
 
-  .nav-link {
-    font-size: 0.875rem;
-  }
-
-  .nav-btn-reservasi {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-  }
-
-  .brand-name {
-    font-size: 1.25rem;
-  }
-
-  .logo-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .logo-text {
-    font-size: 1.125rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .navbar-container {
-    padding: 0.75rem 1rem;
-  }
-
-  .navbar-menu {
-    width: 100%;
-    justify-content: space-between;
-    margin-top: 0.5rem;
-  }
-
-  .nav-link {
-    font-size: 0.8rem;
-  }
-
-  .nav-btn-reservasi {
-    padding: 0.5rem 0.875rem;
-    font-size: 0.8rem;
+  .navbar-menu.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
   }
 }
