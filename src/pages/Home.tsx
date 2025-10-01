@@ -25,9 +25,7 @@ const Home: React.FC = () => {
         boxShadow: "0 4px 8px rgba(0,0,0,0.05)",
       }}
     >
-      <div style={{ fontSize: "3rem", color: "#007bff", marginBottom: "10px" }}>
-        {icon}
-      </div>
+      <div style={{ fontSize: "3rem", color: "#007bff", marginBottom: "10px" }}>{icon}</div>
       <h3 style={{ color: "#333" }}>{title}</h3>
       <p style={{ color: "#666", fontSize: "0.9rem" }}>{description}</p>
     </div>
@@ -41,8 +39,7 @@ const Home: React.FC = () => {
       {/* A. Hero Section */}
       <div
         style={{
-          background:
-            "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/assets/hero-bg.jpg)",
+          background: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/assets/hero-bg.jpg)",
           backgroundSize: "cover",
           height: "80vh",
           display: "flex",
@@ -53,12 +50,8 @@ const Home: React.FC = () => {
           textAlign: "center",
         }}
       >
-        <h1 style={{ fontSize: "3.5rem", marginBottom: "10px" }}>
-          Satu Tempat, Semua Lapangan.
-        </h1>
-        <p style={{ fontSize: "1.5rem", marginBottom: "30px" }}>
-          Reservasi Cepat, Main Kapan Saja di Aceh.
-        </p>
+        <h1 style={{ fontSize: "3.5rem", marginBottom: "10px" }}>Satu Tempat, Semua Lapangan.</h1>
+        <p style={{ fontSize: "1.5rem", marginBottom: "30px" }}>Reservasi Cepat, Main Kapan Saja di Aceh.</p>
         <button
           onClick={handleReservasiClick}
           style={{
@@ -78,11 +71,7 @@ const Home: React.FC = () => {
 
       {/* B. Feature Section (Keunggulan) */}
       <div style={{ padding: "60px 50px", backgroundColor: "#f9f9f9" }}>
-        <h2
-          style={{ textAlign: "center", marginBottom: "40px", color: "#333" }}
-        >
-          Mengapa Memilih MilanoSport?
-        </h2>
+        <h2 style={{ textAlign: "center", marginBottom: "40px", color: "#333" }}>Mengapa Memilih MilanoSport?</h2>
         <div
           style={{
             display: "flex",
@@ -90,21 +79,9 @@ const Home: React.FC = () => {
             flexWrap: "wrap",
           }}
         >
-          <FeatureCard
-            icon="⚽"
-            title="Fasilitas Terlengkap"
-            description="Mini Soccer, Futsal, Badminton, dan Padel dalam satu platform reservasi yang mudah."
-          />
-          <FeatureCard
-            icon="📅"
-            title="Jadwal Real-time"
-            description="Cek ketersediaan semua unit lapangan Anda secara langsung tanpa perlu telepon atau chat."
-          />
-          <FeatureCard
-            icon="💰"
-            title="Harga Terbaik"
-            description="Kami menawarkan harga sewa yang paling kompetitif dan transparan di seluruh wilayah Aceh."
-          />
+          <FeatureCard icon="⚽" title="Fasilitas Terlengkap" description="Mini Soccer, Futsal, Badminton, dan Padel dalam satu platform reservasi yang mudah." />
+          <FeatureCard icon="📅" title="Jadwal Real-time" description="Cek ketersediaan semua unit lapangan Anda secara langsung tanpa perlu telepon atau chat." />
+          <FeatureCard icon="💰" title="Harga Terbaik" description="Kami menawarkan harga sewa yang paling kompetitif dan transparan di seluruh wilayah Aceh." />
         </div>
       </div>
 
@@ -117,9 +94,7 @@ const Home: React.FC = () => {
           color: "white",
         }}
       >
-        <h2 style={{ marginBottom: "20px" }}>
-          Siap Amankan Lapangan Anda Hari Ini?
-        </h2>
+        <h2 style={{ marginBottom: "20px" }}>Siap Amankan Lapangan Anda Hari Ini?</h2>
         <button
           onClick={handleReservasiClick}
           style={{
@@ -146,10 +121,7 @@ const Home: React.FC = () => {
           textAlign: "center",
         }}
       >
-        <p>
-          &copy; 2025 MilanoSport. Reservasi Lapangan Aceh. | Kontak: (0651)
-          123456
-        </p>
+        <p>&copy; 2025 MilanoSport. Reservasi Lapangan Aceh. | Kontak: (0651) 123456</p>
       </div>
     </div>
   );

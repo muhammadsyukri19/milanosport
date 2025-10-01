@@ -1,12 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "./Step2_ScheduleCheck.css";
-
-interface Props {
-  selectedField?: string;
-  onScheduleSelect: (date: string, time: string, duration: number, totalPrice: number) => void;
-  onBack: () => void;
-  onFieldSelect?: (fieldType: string) => void;
-}
 
 interface TimeSlot {
   time: string;
@@ -58,19 +52,38 @@ const generateDates = () => {
   return dates;
 };
 
-const Step2_ScheduleCheck: React.FC<Props> = ({ selectedField, onScheduleSelect, onBack, onFieldSelect }) => {
+const Step2_ScheduleCheck: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const selectedFieldFromUrl = searchParams.get("field");
+
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [duration, setDuration] = useState<number>(1);
-  const [currentField, setCurrentField] = useState<string>(selectedField || "");
+  const [currentField, setCurrentField] = useState<string>(selectedFieldFromUrl || "");
 
   const dates = generateDates();
   const basePrice = FIELD_PRICES[currentField as keyof typeof FIELD_PRICES] || 0;
 
   const handleFieldSelect = (fieldType: string) => {
     setCurrentField(fieldType);
-    if (onFieldSelect) {
-      onFieldSelect(fieldType);
+  };
+
+  const handleBack = () => {
+    navigate("/reservasi");
+  };
+
+  const handleContinue = () => {
+    if (selectedDate && selectedTime && duration > 0 && currentField) {
+      const totalPrice = calculateTotalPrice();
+      const params = new URLSearchParams({
+        field: currentField,
+        date: selectedDate,
+        time: selectedTime,
+        duration: duration.toString(),
+        totalPrice: totalPrice.toString(),
+      });
+      navigate(`/booking?${params.toString()}`);
     }
   };
 
@@ -91,13 +104,6 @@ const Step2_ScheduleCheck: React.FC<Props> = ({ selectedField, onScheduleSelect,
 
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time);
-  };
-
-  const handleContinue = () => {
-    if (selectedDate && selectedTime && duration > 0) {
-      const totalPrice = calculateTotalPrice();
-      onScheduleSelect(selectedDate, selectedTime, duration, totalPrice);
-    }
   };
 
   const formatDate = (date: Date) => {
@@ -129,8 +135,8 @@ const Step2_ScheduleCheck: React.FC<Props> = ({ selectedField, onScheduleSelect,
   return (
     <div className="schedule-container">
       <div className="schedule-header">
-        <button className="back-button" onClick={onBack}>
-          ← Kembali
+        <button className="back-button" onClick={handleBack}>
+          Kembali
         </button>
         <div className="schedule-title-section">
           <h1 className="schedule-title">Pilih Waktu Bermain</h1>
@@ -224,7 +230,7 @@ const Step2_ScheduleCheck: React.FC<Props> = ({ selectedField, onScheduleSelect,
             <div className="summary-card">
               <div className="summary-item">
                 <span className="summary-label">Lapangan:</span>
-                <span className="summary-value">{selectedField}</span>
+                <span className="summary-value">{currentField}</span>
               </div>
               <div className="summary-item">
                 <span className="summary-label">Tanggal:</span>

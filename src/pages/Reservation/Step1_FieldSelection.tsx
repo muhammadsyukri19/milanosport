@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Step1_FieldSelection.css";
 
 interface FieldType {
@@ -12,7 +13,7 @@ const DUMMY_FIELDS: FieldType[] = [
   {
     type: "Mini Soccer",
     price: 200000,
-    description: "Lapangan rumput sintetis standar berkualitas tinggi dengan fasilitas lengkap.",
+    description: "Lapangan rumput sintetis berkualitas tinggi dengan fasilitas lengkap.",
     icon: "⚽",
   },
   {
@@ -138,10 +139,14 @@ const FieldCardUI: React.FC<{
   );
 };
 
-const Step1_FieldSelection: React.FC<{
-  onFieldSelect?: (fieldType: string) => void;
-  onCheckSchedule?: () => void;
-}> = ({ onFieldSelect, onCheckSchedule }) => {
+const Step1_FieldSelection: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleFieldSelect = (fieldType: string) => {
+    // Navigate to schedule page with selected field
+    navigate(`/jadwal?field=${encodeURIComponent(fieldType)}`);
+  };
+
   return (
     <div className="field-selection-container">
       <div className="field-header">
@@ -151,7 +156,7 @@ const Step1_FieldSelection: React.FC<{
 
       <div className="field-cards-container">
         {DUMMY_FIELDS.map((field) => (
-          <FieldCardUI key={field.type} field={field} onFieldSelect={onFieldSelect} />
+          <FieldCardUI key={field.type} field={field} onFieldSelect={handleFieldSelect} />
         ))}
       </div>
     </div>

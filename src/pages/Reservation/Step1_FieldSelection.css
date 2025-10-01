@@ -47,10 +47,10 @@
   background: white;
   border: 2px solid #f1f5f9;
   border-radius: 20px;
-  overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   position: relative;
+  overflow: hidden;
 }
 
 .field-card:hover {
@@ -161,11 +161,11 @@
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(135deg, #059669, #047857);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-secondary {
@@ -175,10 +175,12 @@
 }
 
 .btn-secondary:hover {
-  transform: translateY(-2px);
-  background: rgba(16, 185, 129, 0.1);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+  transform: translateY(-3px) scale(1.02);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
+  backdrop-filter: blur(15px);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.3);
+  border-color: #059669;
+  color: #047857;
 }
 
 /* Modal Styles */
@@ -189,7 +191,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -200,10 +202,11 @@
 .modal-content {
   background: white;
   border-radius: 24px;
-  max-width: 600px;
+  max-width: 1000px;
   width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
   position: relative;
   animation: modalSlideIn 0.3s ease-out;
@@ -221,20 +224,21 @@
 }
 
 .modal-header {
-  padding: 40px 40px 20px 40px;
+  padding: 25px 30px 15px 30px;
   border-bottom: 1px solid #f1f5f9;
   display: flex;
   align-items: center;
   position: relative;
+  flex-shrink: 0;
 }
 
 .modal-icon {
-  font-size: 3rem;
-  margin-right: 20px;
+  font-size: 2.5rem;
+  margin-right: 15px;
 }
 
 .modal-title {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 700;
   margin: 0;
   color: #1f2937;
@@ -261,15 +265,15 @@
 }
 
 .modal-image {
-  padding: 0 40px;
-  margin-bottom: 30px;
+  padding: 0 30px 15px 30px;
+  flex-shrink: 0;
 }
 
 .image-placeholder {
-  height: 200px;
+  height: 150px;
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border: 2px dashed #10b981;
-  border-radius: 16px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -278,44 +282,47 @@
 }
 
 .image-icon {
-  font-size: 3rem;
-  margin-bottom: 12px;
+  font-size: 2.5rem;
+  margin-bottom: 8px;
 }
 
 .modal-details {
-  padding: 0 40px 40px 40px;
+  padding: 15px 30px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .detail-section {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .detail-section h3 {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
 }
 
 .detail-section p {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #64748b;
-  line-height: 1.6;
+  line-height: 1.5;
   margin: 0;
 }
 
 .price-info {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border: 1px solid #bbf7d0;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 10px;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .price-value {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #10b981;
 }
@@ -327,15 +334,17 @@
 }
 
 .facilities-list li {
-  padding: 8px 0;
+  padding: 6px 0;
   color: #64748b;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .modal-actions {
-  padding: 0 40px 40px 40px;
+  padding: 15px 30px 25px 30px;
   display: flex;
   justify-content: flex-end;
+  flex-shrink: 0;
+  border-top: 1px solid #f1f5f9;
 }
 
 /* Responsive Design */
@@ -478,9 +487,9 @@
 }
 
 .btn-check-schedule:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(16, 185, 129, 0.6);
+  background: linear-gradient(135deg, #059669, #047857);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
 }
