@@ -12,20 +12,73 @@ import AboutUs from "./pages/AboutUs.tsx"; // Pastikan path ini benar
 import Step1_FieldSelection from "./pages/Reservation/Step1_FieldSelection.tsx";
 import Step2_ScheduleCheck from "./pages/Reservation/Step2_ScheduleCheck.tsx";
 import Step3_BookingForm from "./pages/Reservation/Step3_BookingForm.tsx";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 
-const App: React.FC = () => {
+// Layout component that includes Navbar
+const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/reservasi" element={<Step1_FieldSelection />} />
-        <Route path="/jadwal" element={<Step2_ScheduleCheck />} />
-        <Route path="/booking" element={<Step3_BookingForm />} />
-        <Route path="/tentang" element={<AboutUs />} />
-        <Route path="*" element={<h1>404 Not Found</h1>} />
-      </Routes>
+      {children}
     </>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <MainLayout>
+            <Home />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/reservasi"
+        element={
+          <MainLayout>
+            <Step1_FieldSelection />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/jadwal"
+        element={
+          <MainLayout>
+            <Step2_ScheduleCheck />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/booking"
+        element={
+          <MainLayout>
+            <Step3_BookingForm />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/tentang"
+        element={
+          <MainLayout>
+            <AboutUs />
+          </MainLayout>
+        }
+      />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route
+        path="*"
+        element={
+          <MainLayout>
+            <h1>404 Not Found</h1>
+          </MainLayout>
+        }
+      />
+    </Routes>
   );
 };
 
