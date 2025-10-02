@@ -14,13 +14,24 @@ import Step2_ScheduleCheck from "./pages/Reservation/Step2_ScheduleCheck.tsx";
 import Step3_BookingForm from "./pages/Reservation/Step3_BookingForm.tsx";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import Profile from "./pages/Profile/Profile";
 
 // Layout component that includes Navbar
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <>
       <Navbar />
-      {children}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/reservasi" element={<Step1_FieldSelection />} />
+        <Route path="/jadwal" element={<Step2_ScheduleCheck />} />
+        <Route path="/booking" element={<Step3_BookingForm />} />
+        <Route path="/tentang" element={<AboutUs />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<h1>404 Not Found</h1>} />
+      </Routes>
     </>
   );
 };
