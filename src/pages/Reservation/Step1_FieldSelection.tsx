@@ -1,40 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { fieldApi, type Field } from "../../api/fieldApi";
 import "./Step1_FieldSelection.css";
 
 interface FieldType {
-  type: "Mini Soccer" | "Futsal" | "Badminton" | "Padel";
+  _id: string;
+  type: string;
   price: number;
   description: string;
   icon: string;
 }
 
-const DUMMY_FIELDS: FieldType[] = [
-  {
-    type: "Mini Soccer",
-    price: 200000,
-    description: "Lapangan rumput sintetis berkualitas tinggi dengan fasilitas lengkap.",
-    icon: "⚽",
-  },
-  {
-    type: "Futsal",
-    price: 150000,
-    description: "Permukaan vinyl berkualitas tinggi dengan pencahayaan optimal.",
-    icon: "🥅",
-  },
-  {
-    type: "Badminton",
-    price: 50000,
-    description: "4 unit lapangan dengan lantai kayu dan net standar internasional.",
-    icon: "🏸",
-  },
-  {
-    type: "Padel",
-    price: 130000,
-    description: "2 unit lapangan dengan dinding kaca dan permukaan sintetis premium.",
-    icon: "🎾",
-  },
-];
+// Icon mapping for sports
+const SPORT_ICONS: Record<string, string> = {
+  MiniSoccer: "⚽",
+  Futsal: "🥅",
+  Badminton: "🏸",
+  Padel: "🎾",
+};
+
+// Description mapping
+const SPORT_DESCRIPTIONS: Record<string, string> = {
+  MiniSoccer: "Lapangan rumput sintetis berkualitas tinggi dengan fasilitas lengkap.",
+  Futsal: "Permukaan vinyl berkualitas tinggi dengan pencahayaan optimal.",
+  Badminton: "4 unit lapangan dengan lantai kayu dan net standar internasional.",
+  Padel: "2 unit lapangan dengan dinding kaca dan permukaan sintetis premium.",
+};
 
 const FieldDetailModal: React.FC<{ field: FieldType; onClose: () => void }> = ({ field, onClose }) => (
   <div className="modal-overlay" onClick={onClose}>
@@ -141,11 +132,70 @@ const FieldCardUI: React.FC<{
 
 const Step1_FieldSelection: React.FC = () => {
   const navigate = useNavigate();
+  const [fields, setFields] = useState<FieldType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFields = async () => {
+      try {
+        setLoading(true);
+        const response = await fieldApi.getAllFields();
+
+        // Group fields by sport and convert to FieldType
+        const fieldsBySport: Record<string, Field> = {};
+        response.data.forEach((field) => {
+          if (!fieldsBySport[field.sport]) {
+            fieldsBySport[field.sport] = field;
+          }
+        });
+
+        const formattedFields: FieldType[] = Object.values(fieldsBySport).map((field) => ({
+          _id: field._id,
+          type: field.sport,
+          price: field.pricePerHour,
+          description: SPORT_DESCRIPTIONS[field.sport] || "Fasilitas olahraga berkualitas tinggi.",
+          icon: SPORT_ICONS[field.sport] || "🏟️",
+        }));
+
+        setFields(formattedFields);
+        setError(null);
+      } catch (err: any) {
+        console.error("Error fetching fields:", err);
+        setError(err.message || "Gagal memuat data lapangan");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFields();
+  }, []);
 
   const handleFieldSelect = (fieldType: string) => {
     // Navigate to schedule page with selected field
     navigate(`/jadwal?field=${encodeURIComponent(fieldType)}`);
   };
+
+  if (loading) {
+    return (
+      <div className="field-selection-container">
+        <div className="field-header">
+          <h1 className="field-title">Memuat Data Lapangan...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="field-selection-container">
+        <div className="field-header">
+          <h1 className="field-title">Gagal Memuat Data</h1>
+          <p className="field-subtitle">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="field-selection-container">
@@ -155,8 +205,8 @@ const Step1_FieldSelection: React.FC = () => {
       </div>
 
       <div className="field-cards-container">
-        {DUMMY_FIELDS.map((field) => (
-          <FieldCardUI key={field.type} field={field} onFieldSelect={handleFieldSelect} />
+        {fields.map((field) => (
+          <FieldCardUI key={field._id} field={field} onFieldSelect={handleFieldSelect} />
         ))}
       </div>
     </div>

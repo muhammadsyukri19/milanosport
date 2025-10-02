@@ -1,7 +1,8 @@
 import axios from "axios";
+import type { InternalAxiosRequestConfig } from "axios";
 
 // Base API configuration
-const API_BASE_URL = "http://localhost:5000/api"; // Adjust this to your backend URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -11,25 +12,29 @@ const api = axios.create({
   },
 });
 
-// Field interfaces
+// Add token to requests if available
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Field interfaces matching backend schema
 export interface Field {
   _id: string;
   name: string;
+  sport: string; // "Futsal" | "MiniSoccer" | "Badminton" | "Padel"
   pricePerHour: number;
-  sport: {
-    _id: string;
-    sportName: string;
-  };
   availability: Array<{
-    dayOfWeek: number;
-    openTime: string;
-    closeTime: string;
+    dayOfWeek: number; // 0 (Sunday) to 6 (Saturday)
+    openTime: string; // "HH:MM"
+    closeTime: string; // "HH:MM"
   }>;
   isActive: boolean;
-  description?: string;
-  facilities?: string[];
-  location?: string;
-  images?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface FieldResponse {
@@ -38,17 +43,25 @@ export interface FieldResponse {
   message: string;
 }
 
-export interface Sport {
-  _id: string;
-  sportName: string;
-  description?: string;
-  maxPlayers?: number;
-  minPlayers?: number;
+export interface FieldDetailResponse {
+  status: number;
+  data: Field;
+  message: string;
 }
 
-export interface SportResponse {
+export interface FieldAvailabilityResponse {
   status: number;
-  data: Sport[];
+  data: {
+    available: boolean;
+    openTime?: string;
+    closeTime?: string;
+    bookedSlots?: Array<{
+      start: string;
+      end: string;
+    }>;
+    date?: string;
+    message?: string;
+  };
   message: string;
 }
 
@@ -65,7 +78,7 @@ export const fieldApi = {
   },
 
   // Get field by ID
-  getFieldById: async (fieldId: string): Promise<{ status: number; data: Field; message: string }> => {
+  getFieldById: async (fieldId: string): Promise<FieldDetailResponse> => {
     try {
       const response = await api.get(`/fields/${fieldId}`);
       return response.data;
@@ -74,93 +87,25 @@ export const fieldApi = {
     }
   },
 
-  // Get fields by sport
-  getFieldsBySport: async (sportId: string): Promise<FieldResponse> => {
+  // Get fields by sport name (Futsal, MiniSoccer, Badminton, Padel)
+  getFieldsBySport: async (sportName: string): Promise<FieldResponse> => {
     try {
-      const response = await api.get(`/fields?sport=${sportId}`);
+      const response = await api.get(`/fields/sport/${sportName}`);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Gagal mengambil lapangan berdasarkan olahraga");
     }
   },
 
-  // Get all sports
-  getAllSports: async (): Promise<SportResponse> => {
+  // Get field availability for a specific date
+  getFieldAvailability: async (fieldId: string, date: string): Promise<FieldAvailabilityResponse> => {
     try {
-      const response = await api.get("/sports");
+      const response = await api.get(`/fields/${fieldId}/availability/${date}`);
       return response.data;
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Gagal mengambil data olahraga");
+      throw new Error(error.response?.data?.message || "Gagal mengambil ketersediaan lapangan");
     }
   },
 };
-
-// Fallback data for development (same as in Step2)
-export const FALLBACK_FIELDS: Field[] = [
-  {
-    _id: "field1",
-    name: "Mini Soccer",
-    pricePerHour: 200000,
-    sport: { _id: "sport1", sportName: "Mini Soccer" },
-    availability: [
-      { dayOfWeek: 0, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 1, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 2, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 3, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 4, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 5, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 6, openTime: "06:00", closeTime: "22:00" },
-    ],
-    isActive: true,
-  },
-  {
-    _id: "field2",
-    name: "Futsal",
-    pricePerHour: 150000,
-    sport: { _id: "sport2", sportName: "Futsal" },
-    availability: [
-      { dayOfWeek: 0, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 1, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 2, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 3, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 4, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 5, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 6, openTime: "06:00", closeTime: "22:00" },
-    ],
-    isActive: true,
-  },
-  {
-    _id: "field3",
-    name: "Badminton",
-    pricePerHour: 50000,
-    sport: { _id: "sport3", sportName: "Badminton" },
-    availability: [
-      { dayOfWeek: 0, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 1, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 2, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 3, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 4, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 5, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 6, openTime: "06:00", closeTime: "22:00" },
-    ],
-    isActive: true,
-  },
-  {
-    _id: "field4",
-    name: "Padel",
-    pricePerHour: 130000,
-    sport: { _id: "sport4", sportName: "Padel" },
-    availability: [
-      { dayOfWeek: 0, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 1, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 2, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 3, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 4, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 5, openTime: "06:00", closeTime: "22:00" },
-      { dayOfWeek: 6, openTime: "06:00", closeTime: "22:00" },
-    ],
-    isActive: true,
-  },
-];
 
 export default fieldApi;

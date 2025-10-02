@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { authApi } from "../api/authApi";
 
 interface User {
   id: string;
@@ -11,7 +12,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (token: string, userData: User) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
   isAdmin: boolean;
 }
@@ -55,11 +56,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem("userData", JSON.stringify(userData));
   };
 
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userData");
+  const logout = async () => {
+    try {
+      // Call backend logout if user exists
+      if (user) {
+        await authApi.logout(user.id);
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Continue with local logout even if backend call fails
+    } finally {
+      // Clear local state and storage
+      setToken(null);
+      setUser(null);
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userData");
+      // Legacy support
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userRole");
+    }
   };
 
   const value: AuthContextType = {
