@@ -2,7 +2,6 @@
 
 import React from "react";
 // Import Navbar agar tampilan About Us Anda lengkap
-import { Navbar } from "../components/common/Navbar";
 
 const AboutUs: React.FC = () => {
   return (

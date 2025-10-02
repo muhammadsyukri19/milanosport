@@ -77,12 +77,13 @@ body {
     "Oxygen", "Ubuntu", "Cantarell", sans-serif;
   overflow-x: hidden;
   background: var(--gradient-hero);
+  overflow-y: auto;
 }
 
 .home-container {
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* ========== GLASS MORPHISM EFFECT ========== */

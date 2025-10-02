@@ -17,6 +17,8 @@ import "./Home.css";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  // Cek status login dari localStorage (atau ganti sesuai state management Anda)
+  const isLoggedIn = Boolean(localStorage.getItem("isLoggedIn"));
 
   useEffect(() => {
     AOS.init({
@@ -134,7 +136,7 @@ const Home: React.FC = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="hero-section">
+      <section id="hero" className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
             <div className="hero-badge">
@@ -162,7 +164,16 @@ const Home: React.FC = () => {
               ))}
             </div>
 
-            <button onClick={() => navigate("/reservasi")} className="hero-btn">
+            <button
+              onClick={() => {
+                if (isLoggedIn) {
+                  navigate("/reservasi");
+                } else {
+                  navigate("/login");
+                }
+              }}
+              className="hero-btn"
+            >
               Reservasi Sekarang
             </button>
           </div>
@@ -222,7 +233,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section className="field-selection-section">
+      <section id="reservasi" className="field-selection-section">
         <div className="field-selection-container">
           {/* Section Header */}
           <div className="section-header">
@@ -273,7 +284,16 @@ const Home: React.FC = () => {
             Jangan sampai kehabisan slot! Booking sekarang dan nikmati
             pengalaman bermain terbaik.
           </p>
-          <button onClick={() => navigate("/reservasi")} className="cta-btn">
+          <button
+            onClick={() => {
+              if (isLoggedIn) {
+                navigate("/reservasi");
+              } else {
+                navigate("/login");
+              }
+            }}
+            className="cta-btn"
+          >
             <span>Cek Jadwal & Booking</span>
           </button>
         </div>
@@ -340,7 +360,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* About Us Section */}
-      <section className="about-section">
+      <section id="tentang" className="about-section">
         <div className="section-content" data-aos="fade-up">
           <div className="section-header">
             <h2 className="section-title-feature1">Tentang Kami</h2>
