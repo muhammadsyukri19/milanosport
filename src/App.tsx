@@ -14,6 +14,7 @@ import Step2_ScheduleCheck from "./pages/Reservation/Step2_ScheduleCheck.tsx";
 import Step3_BookingForm from "./pages/Reservation/Step3_BookingForm.tsx";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import Profile from "./pages/Profile/Profile";
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ const App: React.FC = () => {
         <Route path="/tentang" element={<AboutUs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </>
