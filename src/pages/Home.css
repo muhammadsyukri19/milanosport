@@ -745,7 +745,6 @@ body {
     "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
 }
 
-
 .section-title-feature {
   font-size: 3rem;
   font-weight: 800;
@@ -1074,8 +1073,8 @@ body {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid #f3f4f6;
 }
 
@@ -1096,7 +1095,7 @@ body {
 }
 
 .price-period {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: #6b7280;
   font-weight: 500;
   font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
