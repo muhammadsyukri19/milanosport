@@ -3,8 +3,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-// VERIFIKASI PATH IMPOR DI BAWAH INI
-import { Navbar } from "./components/common/Navbar"; // Pastikan path ini benar
+import { Navbar } from "./components/common/Navbar";
+import { ProtectedRoute } from "./components/common/ProtectedRoute";
 import Home from "./pages/Home.tsx"; // Pastikan path ini benar
 import AboutUs from "./pages/AboutUs.tsx"; // Pastikan path ini benar
 
@@ -39,25 +39,41 @@ const App: React.FC = () => {
       <Route
         path="/reservasi"
         element={
-          <MainLayout>
-            <Step1_FieldSelection />
-          </MainLayout>
+          <ProtectedRoute>
+            <MainLayout>
+              <Step1_FieldSelection />
+            </MainLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/jadwal"
         element={
-          <MainLayout>
-            <Step2_ScheduleCheck />
-          </MainLayout>
+          <ProtectedRoute>
+            <MainLayout>
+              <Step2_ScheduleCheck />
+            </MainLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/booking"
         element={
-          <MainLayout>
-            <Step3_BookingForm />
-          </MainLayout>
+          <ProtectedRoute>
+            <MainLayout>
+              <Step3_BookingForm />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <h1>Profile Page</h1>
+            </MainLayout>
+          </ProtectedRoute>
         }
       />
       <Route
