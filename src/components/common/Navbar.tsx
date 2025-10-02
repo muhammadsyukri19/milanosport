@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import "./Navbar.css";
 
 export const Navbar: React.FC = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -32,7 +33,7 @@ export const Navbar: React.FC = () => {
   const scrollWithOffset = (el: HTMLElement) => {
     const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
     window.scrollTo({ top: y, behavior: "smooth" });
-    setIsOpen(false); // close mobile menu after click
+    setIsOpen(false);
   };
 
   const isActive = (hash: string) =>
@@ -42,17 +43,21 @@ export const Navbar: React.FC = () => {
 
   const handleAuth = () => {
     if (!isLoggedIn) {
-      // Navigate to login page
-      window.location.href = "/login";
+      if (
+        !location.pathname.includes("/login") &&
+        !location.pathname.includes("/register")
+      ) {
+        localStorage.setItem("redirectAfterLogin", location.pathname);
+      }
+      navigate("/login");
+    } else if (location.pathname === "/reservasi") {
+      navigate("/profile");
     } else {
-      // Handle logout
-      setIsLoggedIn(false);
-      localStorage.removeItem("isLoggedIn");
-      window.location.href = "/";
+      navigate("/reservasi");
     }
   };
 
-  // Effect untuk menyimpan status login ke localStorage
+  // Effect untuk cek perubahan status login
   useEffect(() => {
     localStorage.setItem("isLoggedIn", isLoggedIn.toString());
   }, [isLoggedIn]);
