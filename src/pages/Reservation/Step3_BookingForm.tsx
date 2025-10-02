@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { bookingApi, timeUtils } from "../../api/bookingApi";
+import type { CreateBookingRequest } from "../../api/bookingApi";
 import "./Step3_BookingForm.css";
 
 interface FormData {
@@ -21,7 +23,8 @@ const Step3_BookingForm: React.FC = () => {
 
   // Get reservation data from URL parameters
   const reservationData = {
-    selectedField: searchParams.get("field") || "",
+    fieldId: searchParams.get("fieldId") || "",
+    selectedField: searchParams.get("fieldName") || searchParams.get("field") || "",
     selectedDate: searchParams.get("date") || "",
     selectedTime: searchParams.get("time") || "",
     duration: parseInt(searchParams.get("duration") || "1"),
@@ -30,15 +33,11 @@ const Step3_BookingForm: React.FC = () => {
 
   const handleBack = () => {
     const params = new URLSearchParams({
-      field: reservationData.selectedField,
+      field: reservationData.fieldId || reservationData.selectedField,
     });
     navigate(`/jadwal?${params.toString()}`);
   };
 
-  const handleComplete = () => {
-    alert("Reservasi berhasil dibuat!");
-    navigate("/reservasi");
-  };
   const [formData, setFormData] = useState<FormData>({
     customerName: "",
     customerPhone: "",
@@ -86,11 +85,35 @@ const Step3_BookingForm: React.FC = () => {
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      // Calculate end time
+      const endTime = timeUtils.calculateEndTime(reservationData.selectedTime, reservationData.duration);
 
-    setIsSubmitting(false);
-    handleComplete();
+      // Prepare booking data
+      const bookingData: CreateBookingRequest = {
+        fieldId: reservationData.fieldId,
+        date: reservationData.selectedDate,
+        startTime: reservationData.selectedTime,
+        endTime: endTime,
+        paymentMethod: formData.paymentMethod === "cash" ? "cod" : formData.paymentMethod,
+        notes: formData.notes,
+      };
+
+      // Add payment proof if uploading file
+      if (formData.paymentProof) {
+        bookingData.proofOfPayment = formData.paymentProof;
+      }
+
+      // Create booking via API
+      const response = await bookingApi.createBooking(bookingData);
+
+      alert(`Reservasi berhasil dibuat! ID Booking: ${response.data._id}`);
+      navigate("/reservasi");
+    } catch (error: any) {
+      alert(`Gagal membuat reservasi: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -105,9 +128,8 @@ const Step3_BookingForm: React.FC = () => {
 
   const formatTime = (time: string, duration?: number) => {
     if (!duration) return time;
-    const startHour = parseInt(time.split(":")[0]);
-    const endHour = startHour + duration;
-    return `${time} - ${endHour.toString().padStart(2, "0")}:00`;
+    const endTime = timeUtils.calculateEndTime(time, duration);
+    return `${time} - ${endTime}`;
   };
 
   return (
