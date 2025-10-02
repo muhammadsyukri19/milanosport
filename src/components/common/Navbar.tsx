@@ -6,28 +6,22 @@ export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // ⬅️ dummy login state
   const location = useLocation();
 
   useEffect(() => {
     const controlNavbar = () => {
       const currentScrollY = window.scrollY;
-
       if (currentScrollY > lastScrollY && currentScrollY > 10) {
-        // Scrolling down & past threshold
         setIsVisible(false);
       } else {
-        // Scrolling up
         setIsVisible(true);
       }
-
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", controlNavbar);
-
-    return () => {
-      window.removeEventListener("scroll", controlNavbar);
-    };
+    return () => window.removeEventListener("scroll", controlNavbar);
   }, [lastScrollY]);
 
   const isActive = (path: string) => {
@@ -54,7 +48,23 @@ export const Navbar: React.FC = () => {
           <Link to="/about" className={isActive("/about")}>
             Tentang Kami
           </Link>
-          <button className="login-button">Login</button>
+
+          {/* Kondisional: sebelum login => Login, sesudah login => Profil */}
+          {!isLoggedIn ? (
+            <button
+              className="login-button"
+              onClick={() => setIsLoggedIn(true)}
+            >
+              Login
+            </button>
+          ) : (
+            <button
+              className="login-button"
+              onClick={() => setIsLoggedIn(false)}
+            >
+              Profil
+            </button>
+          )}
         </div>
 
         <button className="mobile-menu" onClick={() => setIsOpen(!isOpen)}>
