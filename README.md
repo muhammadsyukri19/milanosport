@@ -1,22 +1,50 @@
 # MilanoSport App
 
-Aplikasi reservasi lapangan olahraga berbasis web menggunakan React dan TypeScript.
+Aplikasi reservasi lapangan olahraga berbasis web menggunakan React, TypeScript dan Express.js.
+
+## Arsitektur
+
+Aplikasi ini terdiri dari:
+- Frontend: React + TypeScript 
+- Backend: Express.js
+- Database: MongoDB
+
+Dalam container Docker, aplikasi berjalan dengan:
+- Nginx sebagai web server dan reverse proxy
+- Frontend static files di-serve oleh Nginx
+- Backend API berjalan menggunakan PM2
+- Routing: 
+  - `/` -> Frontend
+  - `/api` -> Backend
 
 ## Docker
 
 Aplikasi ini tersedia sebagai Docker image di Docker Hub:
-[username/milanosport:v1-UTS](https://hub.docker.com/r/username/milanosport)
+[msyukri19/milanosport:v1-UTS](https://hub.docker.com/r/msyukri19/milanosport)
 
 ### Menjalankan dengan Docker
 
 1. Pull image dari Docker Hub:
 ```bash
-docker pull username/milanosport:v1-UTS
+docker pull msyukri19/milanosport:v1-UTS
 ```
 
-2. Jalankan container:
+2. Setup environment variables (opsional):
 ```bash
-docker run -d -p 80:80 username/milanosport:v1-UTS
+# Backend MongoDB URI
+MONGODB_URI=mongodb://host:port/database
+
+# JWT Secret
+JWT_SECRET=your_jwt_secret
+```
+
+3. Jalankan container:
+```bash
+docker run -d \
+  -p 80:80 \
+  -e MONGODB_URI=mongodb://host:port/database \
+  -e JWT_SECRET=your_jwt_secret \
+  msyukri19/milanosport:v1-UTS
 ```
 
 3. Buka aplikasi di browser:
