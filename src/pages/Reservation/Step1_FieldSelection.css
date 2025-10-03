@@ -20,7 +20,47 @@
   color: #1f2937;
   margin: 0 0 20px 0;
   background: linear-gradient(135deg, #10b981, #059669);
-  -webkit-background-clip: text;
+  -webkit-ba.btn-check-schedule {
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Liquid Glass Effect untuk btn-check-schedule */
+  .btn-check-schedule::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+  }
+
+  .btn-check-schedule:hover::before {
+    width: 400px;
+    height: 400px;
+  }
+
+  .btn-check-schedule:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+    background: linear-gradient(135deg, #059669, #047857);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
@@ -152,6 +192,25 @@
   font-family: inherit;
   position: relative;
   overflow: hidden;
+}
+
+/* Liquid Glass Effect untuk btn-primary */
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn-primary:hover::before {
+  width: 400px;
+  height: 400px;
 }
 
 .btn-primary {

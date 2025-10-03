@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { bookingApi, timeUtils } from "../../api/bookingApi";
+import type { CreateBookingRequest } from "../../api/bookingApi";
 import "./Step3_BookingForm.css";
 
 interface FormData {
   customerName: string;
   customerPhone: string;
-  paymentMethod: string;
   paymentProof?: File;
   notes: string;
 }
 
-const PAYMENT_METHODS = [
-  { id: "bank_transfer_bsi", name: "Transfer BSI", desc: "Bank Syariah Indonesia" },
-  { id: "cash", name: "Bayar di Tempat", desc: "Bayar saat tiba di lokasi" },
-];
+const PAYMENT_METHODS = [{ id: "bank_transfer_bsi", name: "Transfer BSI", desc: "Bank Syariah Indonesia" }];
 
 const Step3_BookingForm: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +19,8 @@ const Step3_BookingForm: React.FC = () => {
 
   // Get reservation data from URL parameters
   const reservationData = {
-    selectedField: searchParams.get("field") || "",
+    fieldId: searchParams.get("fieldId") || "",
+    selectedField: searchParams.get("fieldName") || searchParams.get("field") || "",
     selectedDate: searchParams.get("date") || "",
     selectedTime: searchParams.get("time") || "",
     duration: parseInt(searchParams.get("duration") || "1"),
@@ -30,29 +29,24 @@ const Step3_BookingForm: React.FC = () => {
 
   const handleBack = () => {
     const params = new URLSearchParams({
-      field: reservationData.selectedField,
+      field: reservationData.fieldId || reservationData.selectedField,
     });
     navigate(`/jadwal?${params.toString()}`);
   };
 
-  const handleComplete = () => {
-    alert("Reservasi berhasil dibuat!");
-    navigate("/reservasi");
-  };
   const [formData, setFormData] = useState<FormData>({
     customerName: "",
     customerPhone: "",
-    paymentMethod: "",
     notes: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<any>({});
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
+      setErrors((prev: any) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -61,7 +55,7 @@ const Step3_BookingForm: React.FC = () => {
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {};
+    const newErrors: any = {};
 
     if (!formData.customerName.trim()) {
       newErrors.customerName = "Nama lengkap wajib diisi";
@@ -73,8 +67,8 @@ const Step3_BookingForm: React.FC = () => {
       newErrors.customerPhone = "Format nomor telepon tidak valid";
     }
 
-    if (!formData.paymentMethod) {
-      newErrors.paymentMethod = "Metode pembayaran wajib dipilih";
+    if (!formData.paymentProof) {
+      newErrors.paymentProof = "Bukti transfer wajib diupload";
     }
 
     setErrors(newErrors);
@@ -83,14 +77,39 @@ const Step3_BookingForm: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
+    if (!formData.paymentProof) {
+      alert("Bukti transfer wajib diupload");
+      return;
+    }
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      // Calculate end time
+      const endTime = timeUtils.calculateEndTime(reservationData.selectedTime, reservationData.duration);
 
-    setIsSubmitting(false);
-    handleComplete();
+      // Prepare booking data matching backend schema
+      const bookingData: CreateBookingRequest = {
+        fieldId: reservationData.fieldId,
+        date: reservationData.selectedDate,
+        startTime: reservationData.selectedTime,
+        endTime: endTime,
+        customerName: formData.customerName,
+        customerPhone: formData.customerPhone,
+        notes: formData.notes || "",
+        proofOfPayment: formData.paymentProof,
+      };
+
+      // Create booking via API
+      const response = await bookingApi.createBooking(bookingData);
+
+      alert(`Reservasi berhasil dibuat! ID Booking: ${response.data.bookingId}\nStatus: ${response.data.booking.status}\nSilahkan tunggu konfirmasi admin.`);
+      navigate("/reservasi");
+    } catch (error: any) {
+      alert(`Gagal membuat reservasi: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -105,9 +124,8 @@ const Step3_BookingForm: React.FC = () => {
 
   const formatTime = (time: string, duration?: number) => {
     if (!duration) return time;
-    const startHour = parseInt(time.split(":")[0]);
-    const endHour = startHour + duration;
-    return `${time} - ${endHour.toString().padStart(2, "0")}:00`;
+    const endTime = timeUtils.calculateEndTime(time, duration);
+    return `${time} - ${endTime}`;
   };
 
   return (
@@ -177,72 +195,75 @@ const Step3_BookingForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Payment Method */}
+          {/* Payment Method - Fixed to Transfer BSI */}
           <div className="form-card">
             <h2 className="card-title">Metode Pembayaran</h2>
             <div className="payment-methods">
               {PAYMENT_METHODS.map((method) => (
-                <PaymentMethodCard key={method.id} method={method} selected={formData.paymentMethod === method.id} onSelect={() => handleInputChange("paymentMethod", method.id)} />
+                <div key={method.id} className="payment-card selected">
+                  <div className="payment-radio">
+                    <div className="radio-dot selected"></div>
+                  </div>
+                  <div className="payment-info">
+                    <h3 className="payment-name">{method.name}</h3>
+                    <p className="payment-desc">{method.desc}</p>
+                  </div>
+                </div>
               ))}
             </div>
-            {errors.paymentMethod && <span className="error-message">{errors.paymentMethod}</span>}
           </div>
 
           {/* Bank Account Information for Transfer BSI */}
-          {formData.paymentMethod === "bank_transfer_bsi" && (
-            <div className="form-card">
-              <h2 className="card-title">Informasi Rekening Transfer</h2>
-              <div className="bank-info-card">
-                <div className="bank-header">
-                  <span className="bank-icon">🏦</span>
-                  <div className="bank-details">
-                    <h3 className="bank-name">Bank Syariah Indonesia (BSI)</h3>
-                    <p className="bank-subtitle">Silakan transfer ke rekening berikut</p>
-                  </div>
-                </div>
-
-                <div className="account-details">
-                  <div className="account-item">
-                    <span className="account-label">Nomor Rekening:</span>
-                    <div className="account-value-container">
-                      <span className="account-value">1234567890123456</span>
-                      <button className="copy-button" onClick={() => navigator.clipboard.writeText("1234567890123456")} title="Salin nomor rekening">
-                        📋
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="account-item">
-                    <span className="account-label">Atas Nama:</span>
-                    <span className="account-value">MilanoSport Aceh</span>
-                  </div>
-
-                  <div className="account-item">
-                    <span className="account-label">Total Transfer:</span>
-                    <span className="account-value amount">Rp {reservationData.totalPrice?.toLocaleString("id-ID")}</span>
-                  </div>
-                </div>
-
-                <div className="transfer-notes">
-                  <h4>Petunjuk Transfer:</h4>
-                  <ul>
-                    <li>Transfer sesuai nominal yang tertera</li>
-                    <li>Simpan bukti transfer untuk diupload</li>
-                    <li>Konfirmasi pembayaran maksimal 1x24 jam</li>
-                    <li>Reservasi akan dibatalkan otomatis jika tidak ada konfirmasi</li>
-                  </ul>
+          <div className="form-card">
+            <h2 className="card-title">Informasi Rekening Transfer</h2>
+            <div className="bank-info-card">
+              <div className="bank-header">
+                <span className="bank-icon">🏦</span>
+                <div className="bank-details">
+                  <h3 className="bank-name">Bank Syariah Indonesia (BSI)</h3>
+                  <p className="bank-subtitle">Silakan transfer ke rekening berikut</p>
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* Payment Proof Upload */}
-          {formData.paymentMethod && formData.paymentMethod !== "cash" && (
-            <div className="form-card">
-              <h2 className="card-title">Bukti Pembayaran</h2>
-              <PaymentProofUpload onFileChange={handleFileChange} />
+              <div className="account-details">
+                <div className="account-item">
+                  <span className="account-label">Nomor Rekening:</span>
+                  <div className="account-value-container">
+                    <span className="account-value">1234567890123456</span>
+                    <button className="copy-button" onClick={() => navigator.clipboard.writeText("1234567890123456")} title="Salin nomor rekening">
+                      📋
+                    </button>
+                  </div>
+                </div>
+
+                <div className="account-item">
+                  <span className="account-label">Atas Nama:</span>
+                  <span className="account-value">MilanoSport Aceh</span>
+                </div>
+
+                <div className="account-item">
+                  <span className="account-label">Total Transfer:</span>
+                  <span className="account-value amount">Rp {reservationData.totalPrice?.toLocaleString("id-ID")}</span>
+                </div>
+              </div>
+
+              <div className="transfer-notes">
+                <h4>Petunjuk Transfer:</h4>
+                <ul>
+                  <li>Transfer sesuai nominal yang tertera</li>
+                  <li>Simpan bukti transfer untuk diupload</li>
+                  <li>Konfirmasi pembayaran maksimal 1x24 jam</li>
+                  <li>Reservasi akan dibatalkan otomatis jika tidak ada konfirmasi</li>
+                </ul>
+              </div>
             </div>
-          )}
+          </div>
+
+          {/* Payment Proof Upload - Always show since only transfer is available */}
+          <div className="form-card">
+            <h2 className="card-title">Bukti Pembayaran</h2>
+            <PaymentProofUpload onFileChange={handleFileChange} error={errors.paymentProof} />
+          </div>
 
           {/* Submit Button */}
           <div className="submit-section">
@@ -283,27 +304,11 @@ const FormField: React.FC<{
   </div>
 );
 
-// Payment Method Card Component
-const PaymentMethodCard: React.FC<{
-  method: { id: string; name: string; desc: string };
-  selected: boolean;
-  onSelect: () => void;
-}> = ({ method, selected, onSelect }) => (
-  <div className={`payment-card ${selected ? "selected" : ""}`} onClick={onSelect}>
-    <div className="payment-radio">
-      <div className={`radio-dot ${selected ? "selected" : ""}`}></div>
-    </div>
-    <div className="payment-info">
-      <h3 className="payment-name">{method.name}</h3>
-      <p className="payment-desc">{method.desc}</p>
-    </div>
-  </div>
-);
-
 // Payment Proof Upload Component
 const PaymentProofUpload: React.FC<{
   onFileChange: (file: File | null) => void;
-}> = ({ onFileChange }) => {
+  error?: any;
+}> = ({ onFileChange, error }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -313,21 +318,24 @@ const PaymentProofUpload: React.FC<{
   };
 
   return (
-    <div className="upload-zone">
-      <input type="file" id="payment-proof" accept="image/*,.pdf" onChange={handleFileSelect} className="upload-input" />
-      <label htmlFor="payment-proof" className="upload-label">
-        <div className="upload-icon">📎</div>
-        <div className="upload-text">
-          {selectedFile ? (
-            <span className="file-selected">{selectedFile.name}</span>
-          ) : (
-            <>
-              <span className="upload-main">Klik untuk upload bukti pembayaran</span>
-              <span className="upload-sub">PNG, JPG, PDF maksimal 5MB</span>
-            </>
-          )}
-        </div>
-      </label>
+    <div>
+      <div className="upload-zone">
+        <input type="file" id="payment-proof" accept="image/*,.pdf" onChange={handleFileSelect} className="upload-input" />
+        <label htmlFor="payment-proof" className="upload-label">
+          <div className="upload-icon">📎</div>
+          <div className="upload-text">
+            {selectedFile ? (
+              <span className="file-selected">{selectedFile.name}</span>
+            ) : (
+              <>
+                <span className="upload-main">Klik untuk upload bukti pembayaran</span>
+                <span className="upload-sub">PNG, JPG, PDF maksimal 5MB</span>
+              </>
+            )}
+          </div>
+        </label>
+      </div>
+      {error && <span className="error-message">{typeof error === "string" ? error : "Bukti transfer wajib diupload"}</span>}
     </div>
   );
 };

@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { authApi } from "../../api/authApi";
 import "./Auth.css";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,20 +21,33 @@ const Login: React.FC = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
-      // Simulasi login berhasil
+      // Call backend login API
+      const response = await authApi.login({ email, password });
+
+      // Save auth data using AuthContext
+      login(response.token, {
+        id: response.data._id,
+        name: response.data.name,
+        email: response.data.email,
+        role: response.data.role,
+      });
+
+      // Legacy support - untuk komponen yang masih menggunakan localStorage lama
       localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userEmail", email); // Simpan email untuk ditampilkan di profile
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userRole", response.data.role?.toString() || "false");
 
       // Cek apakah ada halaman redirect yang tersimpan
-      const redirectTo =
-        localStorage.getItem("redirectAfterLogin") || "/reservasi";
-      localStorage.removeItem("redirectAfterLogin"); // Hapus setelah digunakan
+      const redirectTo = localStorage.getItem("redirectAfterLogin") || "/";
+      localStorage.removeItem("redirectAfterLogin");
       navigate(redirectTo);
-    } catch (err) {
-      setError("Terjadi kesalahan saat login");
-      localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("userEmail");
+    } catch (err: any) {
+      setError(err.message || "Terjadi kesalahan saat login");
+      console.error("Login error:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,19 +62,14 @@ const Login: React.FC = () => {
         >
           <div className="auth-image-content">
             <h2 className="auth-image-title">Selamat Datang Kembali</h2>
-            <p className="auth-image-text">
-              Nikmati kemudahan reservasi lapangan olahraga favorit Anda dengan
-              Milano Sport
-            </p>
+            <p className="auth-image-text">Nikmati kemudahan reservasi lapangan olahraga favorit Anda dengan Milano Sport</p>
           </div>
         </div>
 
         <div className="auth-form-section">
           <div className="auth-header">
             <h2 className="auth-title">Login</h2>
-            <p className="auth-subtitle">
-              Masuk ke akun Anda untuk melanjutkan
-            </p>
+            <p className="auth-subtitle">Masuk ke akun Anda untuk melanjutkan</p>
           </div>
 
           <form className="auth-form" onSubmit={handleSubmit}>
@@ -65,34 +77,20 @@ const Login: React.FC = () => {
               <label htmlFor="email" className="form-label">
                 Email
               </label>
-              <input
-                id="email"
-                type="email"
-                className="form-input"
-                placeholder="Masukkan email anda"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <input id="login-email" type="email" className="form-input" placeholder="Masukkan email anda" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
 
             <div className="form-group">
               <label htmlFor="password" className="form-label">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                className="form-input"
-                placeholder="Masukkan password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <input id="login-password" type="password" className="form-input" placeholder="Masukkan password" value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
 
             {error && <p className="error-message">{error}</p>}
 
-            <button type="submit" className="auth-button">
-              Login
+            <button type="submit" className="auth-button" disabled={isLoading}>
+              {isLoading ? "Loading..." : "Login"}
             </button>
           </form>
 
