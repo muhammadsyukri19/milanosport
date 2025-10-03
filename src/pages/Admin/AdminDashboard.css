@@ -1,9 +1,9 @@
 .admin-container {
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 130px auto;
   padding: 20px;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: transparent;
 }
 
 .admin-header {

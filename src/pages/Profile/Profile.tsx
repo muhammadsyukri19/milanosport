@@ -40,14 +40,19 @@ const Profile: React.FC = () => {
   // Load profile data from backend
   useEffect(() => {
     const loadProfile = async () => {
-      if (!user) return;
+      if (!user) {
+        navigate("/login");
+        return;
+      }
 
       try {
         setIsLoading(true);
         const response = await authApi.getProfile();
+
+        // Set profile dengan data dari backend (yang sudah ada saat registrasi)
         setProfile({
-          name: response.data.name || "",
-          email: response.data.email || "",
+          name: response.data.name || user.name || "",
+          email: response.data.email || user.email || "",
           phone: response.data.phone || "",
           address: response.data.address || "",
           birthDate: response.data.birthDate || "",
@@ -55,8 +60,21 @@ const Profile: React.FC = () => {
         });
       } catch (error: any) {
         console.error("Error loading profile:", error);
+
+        // Jika gagal load dari backend, gunakan data user dari context
+        if (user) {
+          setProfile({
+            name: user.name || "",
+            email: user.email || "",
+            phone: "",
+            address: "",
+            birthDate: "",
+            profileImage: null,
+          });
+        }
+
         setMessage({
-          text: error.message || "Gagal memuat profil",
+          text: "Menggunakan data lokal. " + (error.message || "Gagal memuat profil dari server"),
           type: "error",
         });
       } finally {
@@ -65,7 +83,7 @@ const Profile: React.FC = () => {
     };
 
     loadProfile();
-  }, [user]);
+  }, [user, navigate]);
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

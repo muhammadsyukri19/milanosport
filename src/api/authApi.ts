@@ -25,6 +25,7 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 export interface RegisterRequest {
   name: string;
   email: string;
+  phone?: string;
   password: string;
   role: boolean; // true for admin, false for regular user
 }
@@ -56,7 +57,7 @@ export interface ProfileResponse {
     name: string;
     email: string;
     role: boolean;
-    phone?: string;
+    phone: string;
     address?: string;
     birthDate?: string;
     profileImage?: string;

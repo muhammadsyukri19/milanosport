@@ -1,76 +1,40 @@
 /* Step1_FieldSelection.css - Clean White Design with Fresh Green Accents */
 
 .field-selection-container {
-  padding: 110px 40px;
-  padding-bottom: 10px;
-  background: white;
-  min-height: 600px;
+  padding: 150px 40px 20px 40px;
+  background: transparent;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Header Section */
 .field-header {
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
+  flex-shrink: 0;
 }
 
 .field-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #1f2937;
-  margin: 0 0 20px 0;
+  margin: 0 0 12px 0;
   background: linear-gradient(135deg, #10b981, #059669);
-  -webkit-ba.btn-check-schedule {
-    padding: 16px 32px;
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Liquid Glass Effect untuk btn-check-schedule */
-  .btn-check-schedule::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s ease, height 0.6s ease;
-  }
-
-  .btn-check-schedule:hover::before {
-    width: 400px;
-    height: 400px;
-  }
-
-  .btn-check-schedule:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
-    background: linear-gradient(135deg, #059669, #047857);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-  }
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .field-subtitle {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #64748b;
   margin: 0 auto;
   max-width: 600px;
-  line-height: 1.6;
+  line-height: 1.4;
   font-weight: 400;
 }
 
@@ -78,9 +42,12 @@
 .field-cards-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 16px;
   max-width: 1400px;
   margin: 0 auto;
+  flex: 1;
+  align-content: start;
+  overflow: hidden;
 }
 
 /* Field Cards */
@@ -101,7 +68,7 @@
 }
 
 .field-card-header {
-  padding: 40px 30px 30px 30px;
+  padding: 25px 20px 20px 20px;
   text-align: center;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   position: relative;
@@ -124,14 +91,14 @@
 }
 
 .field-icon {
-  font-size: 3.5rem;
-  margin-bottom: 16px;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
   display: block;
   filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.2));
 }
 
 .field-card-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #1f2937;
   margin: 0;
@@ -139,23 +106,23 @@
 }
 
 .field-card-body {
-  padding: 30px;
+  padding: 20px;
 }
 
 .field-description {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #64748b;
-  line-height: 1.6;
-  margin: 0 0 24px 0;
-  min-height: 50px;
+  line-height: 1.4;
+  margin: 0 0 16px 0;
+  min-height: 40px;
 }
 
 .field-price-container {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border: 1px solid #bbf7d0;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 30px;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 16px;
   text-align: center;
 }
 
@@ -168,7 +135,7 @@
 }
 
 .field-price {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #10b981;
   display: block;
@@ -182,10 +149,10 @@
 
 .btn-primary,
 .btn-secondary {
-  padding: 14px 24px;
+  padding: 10px 20px;
   border-radius: 50px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
   cursor: pointer;
   border: none;
@@ -502,52 +469,74 @@
 
 /* Check Schedule Section */
 .check-schedule-section {
-  margin-top: 60px;
+  margin-top: 20px;
   display: flex;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .check-schedule-card {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border: 2px solid #bbf7d0;
-  border-radius: 20px;
-  padding: 40px;
+  border-radius: 16px;
+  padding: 20px 30px;
   text-align: center;
   max-width: 500px;
   box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
 }
 
 .check-schedule-card h3 {
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
 }
 
 .check-schedule-card p {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #64748b;
-  margin: 0 0 24px 0;
-  line-height: 1.5;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
 }
 
 .btn-check-schedule {
-  padding: 16px 32px;
+  padding: 12px 28px;
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
   border: none;
   border-radius: 50px;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Liquid Glass Effect untuk btn-check-schedule */
+.btn-check-schedule::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn-check-schedule:hover::before {
+  width: 400px;
+  height: 400px;
 }
 
 .btn-check-schedule:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(135deg, #059669, #047857);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }

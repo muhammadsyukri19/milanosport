@@ -7,6 +7,17 @@
   box-sizing: border-box;
 }
 
+.field-selection-container-home {
+  padding: 50px 40px 20px 40px;
+  background: transparent;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Common section styles */
 .section-content {
   max-width: 1200px;
@@ -52,14 +63,7 @@
   --primary-emerald-dark: #059669;
   --primary-emerald-darker: #047857;
   --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --gradient-hero: linear-gradient(
-    135deg,
-    #ecfdf5 0%,
-    #f0fdf4 25%,
-    #ffffff 50%,
-    #eff6ff 75%,
-    #dbeafe 100%
-  );
+  --gradient-hero: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 25%, #ffffff 50%, #eff6ff 75%, #dbeafe 100%);
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.18);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -73,8 +77,7 @@ html {
 }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
   overflow-x: hidden;
   background: var(--gradient-hero);
   overflow-y: auto;
@@ -112,21 +115,8 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(
-      circle at 20% 50%,
-      rgba(16, 185, 129, 0.08) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 80% 80%,
-      rgba(59, 130, 246, 0.08) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 40% 20%,
-      rgba(139, 92, 246, 0.06) 0%,
-      transparent 50%
-    );
+  background: radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
   animation: gradient-shift 20s ease infinite;
   z-index: -1;
 }
@@ -211,11 +201,7 @@ body {
 }
 
 .hero-badge span {
-  background: linear-gradient(
-    135deg,
-    rgba(16, 185, 129, 0.15),
-    rgba(16, 185, 129, 0.25)
-  );
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.25));
   color: var(--primary-emerald-darker);
   padding: 0.75rem 1.5rem;
   border-radius: 50px;
@@ -410,12 +396,7 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(16, 185, 129, 0.05),
-    transparent
-  );
+  background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.05), transparent);
   animation: shimmer 3s infinite;
 }
 
@@ -742,8 +723,7 @@ body {
   color: #111827;
   margin-bottom: 1rem;
   text-align: center;
-  font-family: jakarta-sans, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  font-family: jakarta-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
 }
 
 .section-title-feature {
@@ -754,8 +734,7 @@ body {
   letter-spacing: -1px;
   text-align: center;
   letter-spacing: -1px;
-  font-family: jakarta-sans, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  font-family: jakarta-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
 }
 
 .section-title-feature::after {
@@ -865,12 +844,7 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transform: rotate(45deg);
   animation: shine 3s infinite;
 }
@@ -920,9 +894,14 @@ body {
 }
 /* ========== SECTION PILIHAN LAPANGAN ========== */
 .field-selection-section {
-  padding: 100px 0;
+  padding: 60px 0 40px 0;
   background: #fafafa;
   position: relative;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .field-selection-container {
@@ -934,42 +913,40 @@ body {
 /* Section Header */
 .section-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 
 .section-subtitle {
   color: #10b981;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
-  margin-bottom: 1rem;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  margin-bottom: 0.5rem;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .section-description {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #6b7280;
   max-width: 600px;
   margin: 0 auto;
-  line-height: 1.7;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  line-height: 1.5;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* Field Cards Grid */
 .field-cards-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 /* Field Card */
 .field-card {
   background: #ffffff;
-  border-radius: 24px;
-  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  padding: 1.5rem 1.25rem;
   position: relative;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -1003,10 +980,10 @@ body {
 
 .field-card-image {
   width: 100%;
-  height: 220px;
-  border-radius: 20px;
+  height: 140px;
+  border-radius: 14px;
   overflow: hidden;
-  margin-bottom: 1rem;
+  margin-bottom: 0.875rem;
   position: relative;
 }
 
@@ -1025,48 +1002,38 @@ body {
 }
 /* Card Icon */
 .field-card-icon {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(
-    135deg,
-    rgba(16, 185, 129, 0.1),
-    rgba(16, 185, 129, 0.05)
-  );
-  border-radius: 20px;
+  width: 55px;
+  height: 55px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
   transition: all 0.3s ease;
 }
 
 .field-card:hover .field-card-icon {
-  background: linear-gradient(
-    135deg,
-    rgba(16, 185, 129, 0.15),
-    rgba(16, 185, 129, 0.1)
-  );
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.1));
   transform: scale(1.05);
 }
 
 /* Card Content */
 .field-card-title {
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 0.75rem;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  margin-bottom: 0.5rem;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .field-card-description {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #6b7280;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* Card Price */
@@ -1074,33 +1041,30 @@ body {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
   border-bottom: 1px solid #f3f4f6;
 }
 
 .price-label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #9ca3af;
   font-weight: 500;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .price-amount {
-  font-size: 1.75rem;
+  font-size: 1.4rem;
   font-weight: 800;
   color: #10b981;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .price-period {
-  font-size: 1.3rem;
+  font-size: 1rem;
   color: #6b7280;
   font-weight: 500;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* Card Buttons */
@@ -1120,8 +1084,7 @@ body {
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   position: relative;
   overflow: hidden;
 }
@@ -1133,12 +1096,7 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: left 0.5s ease;
 }
 
@@ -1161,8 +1119,7 @@ body {
   border: 1.5px solid #10b981;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .btn-outline:hover {
@@ -1464,11 +1421,7 @@ body {
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.1) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
   animation: pulse 4s ease-in-out infinite;
 }
 
@@ -1566,12 +1519,7 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(16, 185, 129, 0.5),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
 }
 
 .footer-content {
