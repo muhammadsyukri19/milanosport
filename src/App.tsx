@@ -12,26 +12,18 @@ import AboutUs from "./pages/AboutUs.tsx"; // Pastikan path ini benar
 import Step1_FieldSelection from "./pages/Reservation/Step1_FieldSelection.tsx";
 import Step2_ScheduleCheck from "./pages/Reservation/Step2_ScheduleCheck.tsx";
 import Step3_BookingForm from "./pages/Reservation/Step3_BookingForm.tsx";
+import MyBookings from "./pages/Reservation/MyBookings";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Profile from "./pages/Profile/Profile";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 
 // Layout component that includes Navbar
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/reservasi" element={<Step1_FieldSelection />} />
-        <Route path="/jadwal" element={<Step2_ScheduleCheck />} />
-        <Route path="/booking" element={<Step3_BookingForm />} />
-        <Route path="/tentang" element={<AboutUs />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="*" element={<h1>404 Not Found</h1>} />
-      </Routes>
+      <div className="main-content">{children}</div>
     </>
   );
 };
@@ -78,11 +70,21 @@ const App: React.FC = () => {
         }
       />
       <Route
+        path="/my-bookings"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <MyBookings />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/profile"
         element={
           <ProtectedRoute>
             <MainLayout>
-              <h1>Profile Page</h1>
+              <Profile />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -93,6 +95,16 @@ const App: React.FC = () => {
           <MainLayout>
             <AboutUs />
           </MainLayout>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <AdminDashboard />
+            </MainLayout>
+          </ProtectedRoute>
         }
       />
       <Route path="/login" element={<Login />} />

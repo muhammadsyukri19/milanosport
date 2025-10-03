@@ -1,7 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import type { ChangeEvent } from "react";
-import { Camera, User, CheckCircle2, AlertCircle } from "lucide-react";
+import { Camera, User, CheckCircle2, AlertCircle, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "../../components/common/Navbar";
+import { useAuth } from "../../context/AuthContext";
+import { authApi } from "../../api/authApi";
 import "./Profile.css";
 
 interface UserProfile {
@@ -14,14 +17,19 @@ interface UserProfile {
 }
 
 const Profile: React.FC = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<UserProfile>({
-    name: "John Doe", // Nanti diambil dari context/state management
-    email: "john@example.com",
-    phone: "081234567890",
-    address: "Banda Aceh",
-    birthDate: "1990-01-01",
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    birthDate: "",
     profileImage: null,
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const [message, setMessage] = useState<{
     text: string;
@@ -29,15 +37,102 @@ const Profile: React.FC = () => {
   } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Load profile data from backend
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!user) return;
+
+      try {
+        setIsLoading(true);
+        const response = await authApi.getProfile();
+        setProfile({
+          name: response.data.name || "",
+          email: response.data.email || "",
+          phone: response.data.phone || "",
+          address: response.data.address || "",
+          birthDate: response.data.birthDate || "",
+          profileImage: response.data.profileImage || null,
+        });
+      } catch (error: any) {
+        console.error("Error loading profile:", error);
+        setMessage({
+          text: error.message || "Gagal memuat profil",
+          type: "error",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [user]);
+
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        setMessage({
+          text: "Ukuran file terlalu besar. Maksimal 5MB",
+          type: "error",
+        });
+        return;
+      }
+
+      // Check file type
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+      if (!allowedTypes.includes(file.type)) {
+        setMessage({
+          text: "Format file tidak didukung. Gunakan JPG, PNG, atau GIF",
+          type: "error",
+        });
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
-        setProfile((prev) => ({
-          ...prev,
-          profileImage: e.target?.result as string,
-        }));
+        const img = new Image();
+        img.onload = () => {
+          // Compress image using canvas
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          // Set max dimensions
+          const maxWidth = 800;
+          const maxHeight = 800;
+
+          let width = img.width;
+          let height = img.height;
+
+          // Calculate new dimensions maintaining aspect ratio
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          // Draw and compress
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // Convert to base64 with compression (0.7 quality)
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+
+          setProfile((prev) => ({
+            ...prev,
+            profileImage: compressedBase64,
+          }));
+        };
+        img.src = e.target?.result as string;
       };
       reader.readAsDataURL(file);
     }
@@ -53,20 +148,79 @@ const Profile: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      // Implementasi update profile di sini
-      console.log("Update profile:", profile);
+      setIsSaving(true);
+      setMessage(null);
+
+      // Update profile in backend with all fields
+      const response = await authApi.updateProfile({
+        name: profile.name,
+        email: profile.email,
+        phone: profile.phone,
+        address: profile.address,
+        birthDate: profile.birthDate,
+        profileImage: profile.profileImage || undefined,
+      });
+
+      // Update local state with response data
+      setProfile({
+        name: response.data.name || "",
+        email: response.data.email || "",
+        phone: response.data.phone || "",
+        address: response.data.address || "",
+        birthDate: response.data.birthDate || "",
+        profileImage: response.data.profileImage || null,
+      });
+
       setMessage({
         text: "Profil berhasil diperbarui",
         type: "success",
       });
-    } catch (error) {
+
+      // Clear message after 3 seconds
+      setTimeout(() => setMessage(null), 3000);
+    } catch (error: any) {
+      console.error("Error updating profile:", error);
       setMessage({
-        text: "Gagal memperbarui profil",
+        text: error.message || "Gagal memperbarui profil",
         type: "error",
       });
+    } finally {
+      setIsSaving(false);
     }
   };
+
+  const handleLogout = async () => {
+    const confirmLogout = window.confirm("Apakah Anda yakin ingin keluar?");
+    if (!confirmLogout) return;
+
+    try {
+      setIsLoggingOut(true);
+      await logout();
+      navigate("/");
+    } catch (error: any) {
+      console.error("Error during logout:", error);
+      setMessage({
+        text: error.message || "Gagal logout",
+        type: "error",
+      });
+      setIsLoggingOut(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <>
+        <Navbar />
+        <div className="profile-container">
+          <div className="loading-container">
+            <p>Memuat profil...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -76,21 +230,10 @@ const Profile: React.FC = () => {
           {/* Sidebar */}
           <aside className="profile-sidebar">
             <div className="profile-image-container">
-              <img
-                src={profile.profileImage || "/assets/default-avatar.png"}
-                alt="Profile"
-                className="profile-image"
-              />
+              <img src={profile.profileImage || "/assets/default-avatar.png"} alt="Profile" className="profile-image" />
               <label className="profile-image-upload" htmlFor="profile-image">
                 <Camera size={20} />
-                <input
-                  type="file"
-                  id="profile-image"
-                  ref={fileInputRef}
-                  onChange={handleImageUpload}
-                  accept="image/*"
-                  hidden
-                />
+                <input type="file" id="profile-image" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" hidden />
               </label>
             </div>
             <h2 className="profile-name">{profile.name}</h2>
@@ -106,6 +249,11 @@ const Profile: React.FC = () => {
                 <div className="stat-label">Rating</div>
               </div>
             </div>
+
+            <button className="logout-button" onClick={handleLogout} disabled={isLoggingOut}>
+              <LogOut size={20} />
+              {isLoggingOut ? "Logging out..." : "Keluar"}
+            </button>
           </aside>
 
           {/* Main Content */}
@@ -121,91 +269,46 @@ const Profile: React.FC = () => {
                   <label htmlFor="name" className="form-label">
                     Nama Lengkap
                   </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="form-input"
-                    value={profile.name}
-                    onChange={handleInputChange}
-                  />
+                  <input type="text" id="name" name="name" className="form-input" value={profile.name} onChange={handleInputChange} />
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="email" className="form-label">
                     Email
                   </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="form-input"
-                    value={profile.email}
-                    onChange={handleInputChange}
-                  />
+                  <input type="email" id="email" name="email" className="form-input" value={profile.email} onChange={handleInputChange} />
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="phone" className="form-label">
                     Nomor Telepon
                   </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    className="form-input"
-                    value={profile.phone}
-                    onChange={handleInputChange}
-                  />
+                  <input type="tel" id="phone" name="phone" className="form-input" value={profile.phone} onChange={handleInputChange} />
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="birthDate" className="form-label">
                     Tanggal Lahir
                   </label>
-                  <input
-                    type="date"
-                    id="birthDate"
-                    name="birthDate"
-                    className="form-input"
-                    value={profile.birthDate}
-                    onChange={handleInputChange}
-                  />
+                  <input type="date" id="birthDate" name="birthDate" className="form-input" value={profile.birthDate} onChange={handleInputChange} />
                 </div>
 
                 <div className="form-group full-width">
                   <label htmlFor="address" className="form-label">
                     Alamat
                   </label>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    className="form-input"
-                    value={profile.address}
-                    onChange={handleInputChange}
-                  />
+                  <input type="text" id="address" name="address" className="form-input" value={profile.address} onChange={handleInputChange} />
                 </div>
 
                 {message && (
-                  <div
-                    className={`${
-                      message.type === "success"
-                        ? "success-message"
-                        : "error-message"
-                    }`}
-                  >
-                    {message.type === "success" ? (
-                      <CheckCircle2 size={16} />
-                    ) : (
-                      <AlertCircle size={16} />
-                    )}
+                  <div className={`${message.type === "success" ? "success-message" : "error-message"}`}>
+                    {message.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
                     {message.text}
                   </div>
                 )}
 
-                <button type="submit" className="save-button">
-                  Simpan Perubahan
+                <button type="submit" className="save-button" disabled={isSaving}>
+                  {isSaving ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>
               </form>
             </div>

@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { timeUtils } from "../../api/bookingApi";
+import { fieldApi, type Field } from "../../api/fieldApi";
 import "./Step2_ScheduleCheck.css";
 
 interface TimeSlot {
@@ -7,39 +9,6 @@ interface TimeSlot {
   available: boolean;
   price: number;
 }
-
-const FIELD_PRICES = {
-  "Mini Soccer": 200000,
-  Futsal: 150000,
-  Badminton: 50000,
-  Padel: 130000,
-};
-
-const FIELD_DATA = [
-  { type: "Mini Soccer", price: 200000, icon: "⚽" },
-  { type: "Futsal", price: 150000, icon: "🥅" },
-  { type: "Badminton", price: 50000, icon: "🏸" },
-  { type: "Padel", price: 130000, icon: "🎾" },
-];
-
-const TIME_SLOTS: TimeSlot[] = [
-  { time: "06:00", available: true, price: 0.8 }, // Morning discount
-  { time: "07:00", available: true, price: 0.8 },
-  { time: "08:00", available: false, price: 1 },
-  { time: "09:00", available: true, price: 1 },
-  { time: "10:00", available: true, price: 1 },
-  { time: "11:00", available: true, price: 1 },
-  { time: "12:00", available: false, price: 1 },
-  { time: "13:00", available: true, price: 1 },
-  { time: "14:00", available: true, price: 1 },
-  { time: "15:00", available: true, price: 1 },
-  { time: "16:00", available: true, price: 1.2 }, // Peak hours
-  { time: "17:00", available: true, price: 1.2 },
-  { time: "18:00", available: false, price: 1.2 },
-  { time: "19:00", available: true, price: 1.2 },
-  { time: "20:00", available: true, price: 1.2 },
-  { time: "21:00", available: true, price: 1 },
-];
 
 const generateDates = () => {
   const dates = [];
@@ -61,12 +30,111 @@ const Step2_ScheduleCheck: React.FC = () => {
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [duration, setDuration] = useState<number>(1);
   const [currentField, setCurrentField] = useState<string>(selectedFieldFromUrl || "");
+  const [fields, setFields] = useState<Field[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<TimeSlot[]>([]);
+
+  // Function to calculate End Time
+  const calculateEndTime = (startTime: string, duration: number): string => {
+    return timeUtils.calculateEndTime(startTime, duration);
+  };
+
+  // Fetch fields from backend
+  useEffect(() => {
+    const fetchFields = async () => {
+      try {
+        setLoading(true);
+        const response = await fieldApi.getAllFields();
+        setFields(response.data);
+      } catch (error) {
+        console.error("Error fetching fields:", error);
+        // Set empty array on error
+        setFields([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFields();
+  }, []);
+
+  // Generate available time slots based on field availability
+  useEffect(() => {
+    if (currentField && selectedDate) {
+      generateAvailableTimeSlots();
+    }
+  }, [currentField, selectedDate]);
+
+  const generateAvailableTimeSlots = async () => {
+    const field = fields.find((f) => f.name === currentField || f._id === currentField || f.sport === currentField);
+    if (!field || !selectedDate) {
+      setAvailableTimeSlots([]);
+      return;
+    }
+
+    try {
+      // Get availability from backend
+      const availabilityResponse = await fieldApi.getFieldAvailability(field._id, selectedDate);
+
+      if (!availabilityResponse.data.available) {
+        setAvailableTimeSlots([]);
+        return;
+      }
+
+      const { openTime, closeTime, bookedSlots } = availabilityResponse.data;
+      if (!openTime || !closeTime) {
+        setAvailableTimeSlots([]);
+        return;
+      }
+
+      const slots: TimeSlot[] = [];
+      const openMinutes = timeUtils.timeToMinutes(openTime);
+      const closeMinutes = timeUtils.timeToMinutes(closeTime);
+
+      // Generate hourly slots
+      for (let minutes = openMinutes; minutes < closeMinutes; minutes += 60) {
+        const time = timeUtils.minutesToTime(minutes);
+        let priceMultiplier = 1;
+
+        // Apply price multipliers based on time
+        const hour = Math.floor(minutes / 60);
+        if (hour < 8) {
+          priceMultiplier = 0.8; // Morning discount
+        } else if (hour >= 16 && hour < 21) {
+          priceMultiplier = 1.2; // Peak hours
+        }
+
+        // Check if time slot conflicts with booked slots
+        const isBooked = bookedSlots?.some((booked: any) => {
+          const bookedStart = timeUtils.timeToMinutes(booked.start);
+          const bookedEnd = timeUtils.timeToMinutes(booked.end);
+          return minutes >= bookedStart && minutes < bookedEnd;
+        });
+
+        slots.push({
+          time,
+          available: !isBooked,
+          price: priceMultiplier,
+        });
+      }
+
+      setAvailableTimeSlots(slots);
+    } catch (error) {
+      console.error("Error fetching availability:", error);
+      setAvailableTimeSlots([]);
+    }
+  };
 
   const dates = generateDates();
-  const basePrice = FIELD_PRICES[currentField as keyof typeof FIELD_PRICES] || 0;
 
-  const handleFieldSelect = (fieldType: string) => {
-    setCurrentField(fieldType);
+  // Find field details based on current field name, ID, or sport
+  const fieldDetails = fields.find((f) => f.name === currentField || f._id === currentField || f.sport === currentField);
+  const basePrice = fieldDetails?.pricePerHour || 0;
+
+  const handleFieldSelect = (fieldId: string) => {
+    setCurrentField(fieldId);
+    // Reset time selection when field changes
+    setSelectedTime("");
   };
 
   const handleBack = () => {
@@ -74,10 +142,11 @@ const Step2_ScheduleCheck: React.FC = () => {
   };
 
   const handleContinue = () => {
-    if (selectedDate && selectedTime && duration > 0 && currentField) {
+    if (selectedDate && selectedTime && duration > 0 && currentField && fieldDetails) {
       const totalPrice = calculateTotalPrice();
       const params = new URLSearchParams({
-        field: currentField,
+        fieldId: fieldDetails._id,
+        fieldName: fieldDetails.name,
         date: selectedDate,
         time: selectedTime,
         duration: duration.toString(),
@@ -87,8 +156,18 @@ const Step2_ScheduleCheck: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="schedule-container">
+        <div className="schedule-header">
+          <h1 className="schedule-title">Memuat data lapangan...</h1>
+        </div>
+      </div>
+    );
+  }
+
   const getSelectedTimeSlot = () => {
-    return TIME_SLOTS.find((slot) => slot.time === selectedTime);
+    return availableTimeSlots.find((slot) => slot.time === selectedTime);
   };
 
   const calculateTotalPrice = () => {
@@ -115,20 +194,13 @@ const Step2_ScheduleCheck: React.FC = () => {
     return date.toLocaleDateString("id-ID", options);
   };
 
-  const isToday = (date: Date) => {
-    const today = new Date();
-    return date.toDateString() === today.toDateString();
-  };
-
-  const isTomorrow = (date: Date) => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return date.toDateString() === tomorrow.toDateString();
-  };
-
   const getDateLabel = (date: Date) => {
-    if (isToday(date)) return "Hari ini";
-    if (isTomorrow(date)) return "Besok";
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    if (date.toDateString() === today.toDateString()) return "Hari ini";
+    if (date.toDateString() === tomorrow.toDateString()) return "Besok";
     return formatDate(date);
   };
 
@@ -142,7 +214,7 @@ const Step2_ScheduleCheck: React.FC = () => {
           <h1 className="schedule-title">Pilih Waktu Bermain</h1>
           {currentField ? (
             <p className="selected-field">
-              Lapangan: <span>{currentField}</span>
+              Lapangan: <span>{fieldDetails?.name || currentField}</span>
             </p>
           ) : (
             <p className="selected-field">Silakan pilih lapangan terlebih dahulu</p>
@@ -156,11 +228,11 @@ const Step2_ScheduleCheck: React.FC = () => {
           <div className="field-selection-section">
             <h2 className="section-title">Pilih Lapangan</h2>
             <div className="field-selector-grid">
-              {FIELD_DATA.map((field) => (
-                <button key={field.type} className="field-selector-card" onClick={() => handleFieldSelect(field.type)}>
-                  <span className="field-selector-icon">{field.icon}</span>
-                  <span className="field-selector-name">{field.type}</span>
-                  <span className="field-selector-price">Rp {field.price.toLocaleString("id-ID")}/jam</span>
+              {fields.map((field) => (
+                <button key={field._id} className="field-selector-card" onClick={() => handleFieldSelect(field._id)}>
+                  <span className="field-selector-icon">🏟️</span>
+                  <span className="field-selector-name">{field.name}</span>
+                  <span className="field-selector-price">Rp {field.pricePerHour.toLocaleString("id-ID")}/jam</span>
                 </button>
               ))}
             </div>
@@ -187,7 +259,7 @@ const Step2_ScheduleCheck: React.FC = () => {
           <div className="time-section">
             <h2 className="section-title">Pilih Jam</h2>
             <div className="time-grid">
-              {TIME_SLOTS.map((slot) => (
+              {availableTimeSlots.map((slot) => (
                 <button
                   key={slot.time}
                   className={`time-slot ${!slot.available ? "unavailable" : ""} ${selectedTime === slot.time ? "selected" : ""}`}
@@ -203,6 +275,7 @@ const Step2_ScheduleCheck: React.FC = () => {
                 </button>
               ))}
             </div>
+            {availableTimeSlots.length === 0 && <p className="no-slots-message">Tidak ada jadwal tersedia untuk hari ini</p>}
           </div>
         )}
 
@@ -230,7 +303,7 @@ const Step2_ScheduleCheck: React.FC = () => {
             <div className="summary-card">
               <div className="summary-item">
                 <span className="summary-label">Lapangan:</span>
-                <span className="summary-value">{currentField}</span>
+                <span className="summary-value">{fieldDetails?.name || currentField}</span>
               </div>
               <div className="summary-item">
                 <span className="summary-label">Tanggal:</span>
@@ -246,7 +319,7 @@ const Step2_ScheduleCheck: React.FC = () => {
               <div className="summary-item">
                 <span className="summary-label">Waktu:</span>
                 <span className="summary-value">
-                  {selectedTime} - {new Date(`2000-01-01T${selectedTime}`).getHours() + duration}:00
+                  {selectedTime} - {calculateEndTime(selectedTime, duration)}
                 </span>
               </div>
               <div className="summary-item">
