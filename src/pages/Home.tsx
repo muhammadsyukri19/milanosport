@@ -70,7 +70,7 @@ const Home: React.FC = () => {
     {
       content: (
         <img
-          src="/assets/badminton.jpg"
+          src="/assets/badminton_new.jpg"
           alt="Badminton"
           style={{ width: "90%", borderRadius: "45px", objectFit: "cover" }}
         />
@@ -97,7 +97,7 @@ const Home: React.FC = () => {
         "Lapangan rumput sintetis premium dengan pencahayaan LED berkualitas tinggi.",
       priceFrom: "150.000",
       category: "mini-soccer",
-      image: "/assets/mini-soccer.jpg",
+      image: "/assets/mini-soccer_game.jpg",
     },
     {
       id: 2,
@@ -107,7 +107,7 @@ const Home: React.FC = () => {
         "Lapangan indoor berkualitas tinggi dengan lantai vinyl anti-slip terbaik.",
       priceFrom: "120.000",
       category: "futsal",
-      image: "/assets/futsal.jpg",
+      image: "/assets/futsal_game.jpg",
     },
     {
       id: 3,
@@ -117,7 +117,7 @@ const Home: React.FC = () => {
         "Court indoor ber-AC dengan lantai karpet standar internasional BWF.",
       priceFrom: "80.000",
       category: "badminton",
-      image: "/assets/badminton.jpg",
+      image: "/assets/badminton_game.jpg",
     },
     {
       id: 4,
