@@ -105,6 +105,13 @@ const Register: React.FC = () => {
             </div>
 
             <div className="form-group">
+              <label htmlFor="phone" className="form-label">
+                Nomor Telepon
+              </label>
+              <input id="phone" name="phone" type="tel" className="form-input" placeholder="Contoh: 08123456789" value={formData.phone} onChange={handleChange} />
+            </div>
+
+            <div className="form-group">
               <label htmlFor="password" className="form-label">
                 Password
               </label>
