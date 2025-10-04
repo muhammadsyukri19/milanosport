@@ -30,7 +30,7 @@ RUN git clone https://github.com/MilanRamadhan/milano-sport-backend.git .
 RUN npm install
 
 # Create .env file for backend
-RUN echo "PORT=5000\nMONGODB_URI=\${MONGODB_URI}\nJWT_SECRET=\${JWT_SECRET}" > .env
+RUN echo "PORT=5000\nMONGO_URI=\${MONGODB_URI}\nJWT_SECRET=\${JWT_SECRET}" > .env
 
 # Production stage
 FROM nginx:alpine
@@ -43,6 +43,7 @@ WORKDIR /app
 
 # Copy backend files
 COPY --from=backend-build /backend ./backend
+RUN ls -la /app/backend
 
 # Copy frontend build
 COPY --from=frontend-build /frontend/dist ./frontend/dist
