@@ -1,65 +1,18 @@
-# Frontend build stage
-FROM node:18-alpine AS frontend-build
-
-# Set working directory
-WORKDIR /frontend
-
-# Copy frontend package files
-COPY package*.json ./
-
-# Install frontend dependencies
-RUN npm install
-
-# Copy frontend files
-COPY . .
-
-# Build the frontend
-RUN npm run build
-
-# Backend build stage
-FROM node:18-alpine AS backend-build
-
-# Set working directory
-WORKDIR /backend
-
-# Clone backend repository
-RUN apk add --no-cache git
-RUN git clone https://github.com/MilanRamadhan/milano-sport-backend.git .
-
-# Install backend dependencies
-RUN npm install
-
-# Create .env file for backend
-RUN echo "PORT=5000\nMONGO_URI=\${MONGODB_URI}\nJWT_SECRET=\${JWT_SECRET}" > .env
-
-# Production stage
-FROM nginx:alpine
-
-# Install Node.js
-RUN apk add --no-cache nodejs npm
-
-# Create app directory
+# build stage
+FROM node:20-alpine AS build
 WORKDIR /app
 
-# Copy backend files
-COPY --from=backend-build /backend ./backend
-RUN ls -la /app/backend
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-# Copy frontend build
-COPY --from=frontend-build /frontend/dist ./frontend/dist
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/http.d/default.conf
-
-# Install PM2 globally
-RUN npm install -g pm2
-
-# Expose port
+# run stage (nginx)
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
-
-# Copy start script
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
-
-# Start services
-CMD ["/app/start.sh"]
+CMD ["nginx", "-g", "daemon off;"]
